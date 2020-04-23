@@ -4,8 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpSession;
 
@@ -31,9 +29,11 @@ public class LoginController {
 //        System.out.println("KeepSigned is:"+KeepSigned);
         if ("1".equals(password)) {
             session.setAttribute("loginUser",username);
-            return "redirect:/index.html";
+
+            return "redirect:/dashboard.html";
         } else {
             model.addAttribute("msg", "用户名或者密码错误");
+
             return "redirect:/";
         }
         //return "ok";

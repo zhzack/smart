@@ -19,7 +19,7 @@ public class Depatment_dao {
     public Collection<Department> getDepartmentCollection(){
         return departmentsHashMap.values();
     }
-    public Department getDepartmentByid(Integer id){
+    public Department getDepartment(Integer id){
         return departmentsHashMap.get(id);
 
     }

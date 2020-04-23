@@ -14,13 +14,13 @@ public class MyMvcConfig implements WebMvcConfigurer {
 //        registry.addViewController("/").setViewName("index");
         registry.addViewController("/login.html").setViewName("/pages/samples/login-2");
         registry.addViewController("/").setViewName("/pages/samples/login-2");
-        registry.addViewController("/charts.html").setViewName("/pages/charts/chartjs.html");
+        registry.addViewController("/charts.html").setViewName("/pages/charts/chartjs");
 
-        //registry.addViewController("/table.html").setViewName("/pages/tables/basic-table.html");
-        registry.addViewController("/elements.html").setViewName("/pages/forms/basic_elements.html");
-        registry.addViewController("/icons.html").setViewName("/pages/icons/mdi.html");
-        registry.addViewController("/buttons.html").setViewName("/pages/ui-features/buttons.html");
-        registry.addViewController("/typography.html").setViewName("/pages/ui-features/typography.html");
+        registry.addViewController("/table.html").setViewName("/pages/tables/basic-table");
+        registry.addViewController("/elements.html").setViewName("/pages/forms/basic_elements");
+        registry.addViewController("/icons.html").setViewName("/pages/icons/mdi");
+        registry.addViewController("/buttons.html").setViewName("/pages/ui-features/buttons");
+        registry.addViewController("/typography.html").setViewName("/pages/ui-features/typography");
     }
 
     @Override

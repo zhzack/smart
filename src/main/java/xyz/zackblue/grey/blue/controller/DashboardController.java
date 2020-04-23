@@ -6,16 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 
-public class EmpController {
+public class DashboardController {
 
-   // Users_dao usersDao;
-
-    @RequestMapping("table.html")
+    @RequestMapping("dashboard.html")
     public String list(Model model) {
         //Collection<Users> usersCollection = usersDao.getUsersCollection();
         model.addAttribute("Emps");
-        return "/pages/tables/basic-table";
-//        return "/pages/samples/login-2";
+
+        return "/index";
 
     }
 
