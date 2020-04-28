@@ -27,14 +27,14 @@ public class LoginController {
 //        System.out.println("username is:"+username);
 //        System.out.println("password is:"+password);
 //        System.out.println("KeepSigned is:"+KeepSigned);
-        if ("1".equals(password)) {
+        if ("2".equals(password)) {
             session.setAttribute("loginUser",username);
 
             return "redirect:/dashboard.html";
         } else {
             model.addAttribute("msg", "用户名或者密码错误");
 
-            return "redirect:/";
+            return "/pages/samples/login-2";
         }
         //return "ok";
     }

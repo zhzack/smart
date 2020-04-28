@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Users_dao {
-    private static Map<Integer, Users> usersHashMap = null;
+    private static final Map<Integer, Users> usersHashMap;
 
     static {
         usersHashMap = new HashMap<>();
@@ -17,7 +17,7 @@ public class Users_dao {
 
     }
 
-    public Collection<Users> getUsersCollection() {
+    public static Collection<Users> getUsersCollection() {
 
         return usersHashMap.values();
     }

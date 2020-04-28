@@ -1,22 +1,9 @@
-
 server:
-  port: 80
-#活动配置，当前使用配置，最上端为默认配置
-#spring:
-#  profiles:
-#    active: local
-#---三条杠作为分割线
+  port: 81
 spring:
-  thymeleaf:
-    cache: false
----
-server:
-  port: 8080
-#当前配置名称
-spring:
-  profiles: local
----
-server:
-  port: 8090
-spring:
-  profiles: test
+  datasource:
+    url: jdbc:mysql://47.97.25.40:3306/grey_db?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: blue
+    password: z0420
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver

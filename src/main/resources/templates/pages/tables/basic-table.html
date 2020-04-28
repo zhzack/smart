@@ -2,19 +2,19 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Home</title>
-  <!-- plugins:css -->
-  <link rel="stylesheet" th:href="@{/vendors/mdi/css/materialdesignicons.min.css}">
-  <link rel="stylesheet" th:href="@{/vendors/base/vendor.bundle.base.css}">
-  <!-- endinject -->
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Home</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/base/vendor.bundle.base.css}">
+    <!-- endinject -->
 
-  <!-- inject:css -->
-  <link rel="stylesheet" th:href="@{/css/style.css}">
-  <!-- endinject -->
-  <link rel="shortcut icon" th:href="@{/images/favicon.png}" />
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- endinject -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}"/>
 </head>
 
 <body>
@@ -58,10 +58,18 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-<!--                                        <tr class="table-info" th:each="emp:${Emp}">-->
-<!--                                            <td th:text="${emp.}"></td>-->
-<!--                                        </tr>-->
+                                        <tr class="table-info" th:each="emp:${users}">
+                                            <td th:text="${emp.getId()}"></td>
+                                            <td th:text="${emp.getName()}"></td>
+                                            <td th:text="${emp.getGender()==0?'男':'女'}"></td>
+<!--                                            <td>[[${emp.getBirth()}]]</td>-->
+                                            <td th:text="${#dates.format(emp.getBirth(),'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            <!--两种写法-->
+                                            <td th:text="${emp.getDepartment().getName()}"></td>
+
+                                        </tr>
                                         <tr class="table-warning">
+
                                             <td>
                                                 2
                                             </td>
