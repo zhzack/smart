@@ -1,4 +1,4 @@
-package xyz.zackblue.grey.blue.config;
+package xyz.blue.config;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 

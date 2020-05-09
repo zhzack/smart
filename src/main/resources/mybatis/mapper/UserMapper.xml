@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.blue.mapper.UserMapper">
+
+    <select id="queryUserList" resultType="User">
+        select *
+        from user
+    </select>
+    <select id="queryUserByID" parameterType="int" resultType="User">
+        select *
+        from user
+        where user_id = #{id}
+    </select>
+    <select id="queryUserByName" parameterType="String" resultType="User">
+        select *
+        from user
+        where user_name = #{name}
+    </select>
+    <select id="addUser" resultType="User">
+        insert into user(user_id, user_name, user_pwd)
+        values (#{id}, #{user_name}, #{user_pwd})
+    </select>
+
+    <select id="updateUser" resultType="User">
+        update user
+        set user_name= #{user_name},
+            user_pwd = #{user_pwd}
+        where user_id = #{user_id}
+    </select>
+
+    <select id="deleteUser" resultType="int">
+        delete
+        from user
+        where user_id = #{user_id}
+    </select>
+
+</mapper>

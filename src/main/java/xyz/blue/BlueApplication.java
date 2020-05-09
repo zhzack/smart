@@ -1,4 +1,4 @@
-package xyz.zackblue.grey.blue;
+package xyz.blue;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
