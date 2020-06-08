@@ -9,7 +9,7 @@ public class MyMvcConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
 
-//        registry.addViewController("/index.html").setViewName("index");
+//        registry.addViewController("/dashborad.html").setViewName("index");
 ////        registry.addViewController("/").setViewName("index");
 //        registry.addViewController("/login.html").setViewName("/pages/samples/login-2");
 //        registry.addViewController("/").setViewName("/pages/samples/login-2");
@@ -24,6 +24,6 @@ public class MyMvcConfig implements WebMvcConfigurer {
 
 //    @Override
 //    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/index.html");
+//        registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/dashborad.html");
 //    }
 }

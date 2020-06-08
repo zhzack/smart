@@ -57,9 +57,8 @@ public class DashboardController {
     public String index() {
         return "index";
     }
-
     //        registry.addViewController("/login.html").setViewName("/pages/samples/login-2");
-//        registry.addViewController("/").setViewName("/pages/samples/login-2");
+    //        registry.addViewController("/").setViewName("/pages/samples/login-2");
     @RequestMapping({"/", "login.html"})
     public String toLogin() {
         return "/pages/samples/login-2";
@@ -73,7 +72,7 @@ public class DashboardController {
         try {//登录成功
             subject.login(usernamePasswordToken);
 
-            return "redirect:/index.html";
+            return "redirect:/dashborad.html";
         } catch (UnknownAccountException e) {//用户名不存在
 
             model.addAttribute("msg", "用户名不存在");
