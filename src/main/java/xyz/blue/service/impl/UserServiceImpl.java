@@ -8,16 +8,16 @@ import xyz.blue.service.UserService;
 
 import java.util.List;
 
-//@Service("userService")//别名
-@Service
+@Service("UserService")//别名
+//@Service
 public class UserServiceImpl implements UserService {
 
-    final
-    UserMapper userMapper;
+    private final UserMapper userMapper;
 
     public UserServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
+
 
     @Override
     public List<User> queryUserList() {
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int addUser(User user) {
+    public Object addUser(User user) {
         return userMapper.addUser(user);
     }
 

@@ -1,10 +1,15 @@
 package xyz.blue.server;
 
-import xyz.blue.entity.Client;
-import xyz.blue.tools.nowdate;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import xyz.blue.entity.Client;
+import xyz.blue.pojo.User;
+import xyz.blue.service.impl.DeviceServiceImpl;
+import xyz.blue.service.impl.UserServiceImpl;
+import xyz.blue.tools.nowdate;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -18,184 +23,203 @@ import java.util.stream.Collectors;
 @Component
 public class SocketServer {
 
-	private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
 
-	/**
-	 *
-	 * 用线程安全的CopyOnWriteArraySet来存放客户端连接的信息
-	 */
-	private static final CopyOnWriteArraySet<Client> socketServers = new CopyOnWriteArraySet<>();
+    @Autowired
+    DeviceServiceImpl deviceService;
+    @Autowired
+    private SocketServer socketServer;
+    @Autowired
+    UserServiceImpl userService;
 
-	/**
-	 *
-	 * websocket封装的session,信息推送，就是通过它来信息推送
-	 */
-	private Session session;
+    user_Log user_log;
+    device_Log device_log;
+    /**
+     * 用线程安全的CopyOnWriteArraySet来存放客户端连接的信息
+     */
+    private static final CopyOnWriteArraySet<Client> socketServers = new CopyOnWriteArraySet<>();
 
-	nowdate nowdate=new nowdate();
-	/**
-	 *
-	 * 服务端的userName,因为用的是set，每个客户端的username必须不一样，否则会被覆盖。
-	 * 要想完成ui界面聊天的功能，服务端也需要作为客户端来接收后台推送用户发送的信息
-	 */
-	private final static String SYS_USERNAME = "blue";
+    /**
+     * websocket封装的session,信息推送，就是通过它来信息推送
+     */
+    private Session session;
+
+    nowdate nowdate = new nowdate();
+    /**
+     * 服务端的userName,因为用的是set，每个客户端的username必须不一样，否则会被覆盖。
+     * 要想完成ui界面聊天的功能，服务端也需要作为客户端来接收后台推送用户发送的信息
+     */
+
+    /**
+     * 用户连接时触发，我们将其添加到
+     * 保存客户端连接信息的socketServers中
+     * <p>
+     * session
+     * userName
+     */
+    @OnOpen
+    public void open(Session session, @PathParam(value = "userName") String client_id) {
+
+        this.session = session;
+
+        socketServers.add(new Client(client_id, session));
+
+        //更新设备状态
+
+        int client_id_int=Integer.parseInt(client_id);
+        System.out.println(client_id_int+2);
 
 
 
+        if(client_id_int>101877){
+
+            user_log.user_onopen(client_id_int);
+
+        }else {
+
+            device_log.device_onopen(client_id_int);
+
+        }
 
 
-	/**
-	 *
-	 * 用户连接时触发，我们将其添加到
-	 * 保存客户端连接信息的socketServers中
-	 *
-	 *  session
-	 *  userName
-	 */
-	@OnOpen
-	public void open(Session session,@PathParam(value="userName")String userName){
 
-			this.session = session;
-			socketServers.add(new Client(userName,session));
+        logger.info(nowdate.nowDate() + "客户端:【{}】连接成功", client_id);
 
-			logger.info(nowdate.nowDate()+"客户端:【{}】连接成功",userName);
-
-	}
-
-	/**
-	 *
-	 * 收到客户端发送信息时触发
-	 * 我们将其推送给客户端(blue)
-	 * 其实也就是服务端本身，为了达到前端聊天效果才这么做的
-	 *
-	 *  message
-	 */
-	@OnMessage
-	public void onMessage(String message){
-
-		Client client = socketServers.stream().filter( cli -> cli.getSession() == session)
-				.collect(Collectors.toList()).get(0);
-
-		sendMessage(client.getUserName()+"<--"+message,SYS_USERNAME);
-
-		logger.info("客户端:【{}】发送信息:{}",client.getUserName(),message);
-	}
-
-	/**
-	 *
-	 * 连接关闭触发，通过sessionId来移除
-	 * socketServers中客户端连接信息
-	 */
-	@OnClose
-	public void onClose(){
-		socketServers.forEach(client ->{
-			if (client.getSession().getId().equals(session.getId())) {
-
-				logger.info("客户端:【{}】断开连接",client.getUserName());
-				socketServers.remove(client);
-
-			}
-		});
-	}
-
-	/**
-	 *
-	 * 发生错误时触发
-	 *  error
-	 */
-    @OnError
-    public void onError(Throwable error) {
-		socketServers.forEach(client ->{
-			if (client.getSession().getId().equals(session.getId())) {
-				socketServers.remove(client);
-				logger.error("客户端:【{}】发生异常",client.getUserName());
-				error.printStackTrace();
-			}
-		});
     }
 
-	/**
-	 *
-	 * 信息发送的方法，通过客户端的userName
-	 * 拿到其对应的session，调用信息推送的方法
-	 * message
-	 *  userName
-	 */
-	public synchronized static void sendMessage(String message,String userName) {
+    /**
+     * 收到客户端发送信息时触发
+     * 我们将其推送给客户端(blue)
+     * 其实也就是服务端本身，为了达到前端聊天效果才这么做的
+     * <p>
+     * message
+     */
+    @OnMessage
+    public void onMessage(String message) {
 
-		socketServers.forEach(client ->{
-			if (userName.equals(client.getUserName())) {
-				try {
-					client.getSession().getBasicRemote().sendText(message);
+        Client client = socketServers.stream().filter(cli -> cli.getSession() == session)
+                .collect(Collectors.toList()).get(0);
 
-					logger.info("客户端:【{}】发送信息:{}",client.getUserName(),message);
+//
+//		User loginUser = (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
+//
+//		sendMessage(client.getUserName()+"<--"+message, String.valueOf(loginUser.getUser_id()));
 
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+        sendMessage(client.getClient_id() + "<--" + message, "123");
 
-	/**
-	 *
-	 * 获取服务端当前客户端的连接数量，
-	 * 因为服务端本身也作为客户端接受信息，
-	 * 所以连接总数还要减去服务端
-	 * 本身的一个连接数
-	 *
-	 * 这里运用三元运算符是因为客户端第一次在加载的时候
-	 * 客户端本身也没有进行连接，-1 就会出现总数为-1的情况，
-	 * 这里主要就是为了避免出现连接数为-1的情况
-	 *
-	 *
-	 */
-	public synchronized static int getOnlineNum(){
-		return (int) socketServers.stream().filter(client -> !client.getUserName().equals(SYS_USERNAME)).count();
-	}
+        logger.info("客户端:【{}】发送信息:{}", client.getClient_id(), message);
+    }
 
-	/**
-	 *
-	 * 获取在线用户名，前端界面需要用到
-	 *
-	 */
-	public synchronized static List<String> getOnlineUsers(){
+    /**
+     * 连接关闭触发，通过sessionId来移除
+     * socketServers中客户端连接信息
+     */
+    @OnClose
+    public void onClose() {
+        socketServers.forEach(client -> {
+            if (client.getSession().getId().equals(session.getId())) {
 
-		return socketServers.stream()
-				.filter(client -> !client.getUserName().equals(SYS_USERNAME))
-				.map(Client::getUserName)
-				.collect(Collectors.toList());
-	}
+                logger.info("客户端:【{}】断开连接", client.getClient_id());
 
-	/**
-	 *
-	 * 信息群发，我们要排除服务端自己不接收到推送信息
-	 * 所以我们在发送的时候将服务端排除掉
-	 *  message
-	 */
-	public synchronized static void sendAll(String message) {
-		//群发，不能发送给服务端自己
-		socketServers.stream().filter(cli -> !cli.getUserName().equals(SYS_USERNAME))
-				.forEach(client -> {
-			try {
-				client.getSession().getBasicRemote().sendText(message);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
+                System.out.println(socketServers.stream().map(Client::getClient_id));
 
-		logger.info("服务端推送给所有客户端 :【{}】",message);
-	}
+                socketServers.remove(client);
 
-	/**
-	 *
-	 * 多个人发送给指定的几个用户
-	 *  message
-	 *  persons
-	 */
-	public synchronized static void SendMany(String message,String [] persons) {
-		for (String userName : persons) {
-			sendMessage(message,userName);
-		}
-	}
+            }
+        });
+    }
+
+    /**
+     * 发生错误时触发
+     * error
+     */
+    @OnError
+    public void onError(Throwable error) {
+        socketServers.forEach(client -> {
+            if (client.getSession().getId().equals(session.getId())) {
+                socketServers.remove(client);
+                logger.error("客户端:【{}】发生异常", client.getClient_id());
+                error.printStackTrace();
+            }
+        });
+    }
+
+    /**
+     * 信息发送的方法，通过客户端的userName
+     * 拿到其对应的session，调用信息推送的方法
+     * message
+     * userName
+     */
+    public synchronized static void sendMessage(String message, String userName) {
+
+        socketServers.forEach(client -> {
+            if (userName.equals(client.getClient_id())) {
+                try {
+                    client.getSession().getBasicRemote().sendText(message);
+
+                    logger.info("客户端:【{}】发送信息:{}", client.getClient_id(), message);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取服务端当前客户端的连接数量，
+     * 因为服务端本身也作为客户端接受信息，
+     * 所以连接总数还要减去服务端
+     * 本身的一个连接数
+     * <p>
+     * 这里运用三元运算符是因为客户端第一次在加载的时候
+     * 客户端本身也没有进行连接，-1 就会出现总数为-1的情况，
+     * 这里主要就是为了避免出现连接数为-1的情况
+     */
+    public synchronized static int getOnlineNum() {
+        return (int) socketServers.stream().filter(client -> !client.getClient_id().equals(123)).count();
+    }
+
+    /**
+     * 获取在线用户名，前端界面需要用到
+     * @return
+     */
+    public synchronized static List<String> getOnlineUsers() {
+
+        User user= (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
+
+        return socketServers.stream()
+                .map(Client::getClient_id)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 信息群发，我们要排除服务端自己不接收到推送信息
+     * 所以我们在发送的时候将服务端排除掉
+     * message
+     */
+    public synchronized static void sendAll(String message) {
+        //群发，不能发送给服务端自己
+        socketServers.stream().filter(cli -> !cli.getClient_id().equals(123))
+                .forEach(client -> {
+                    try {
+                        client.getSession().getBasicRemote().sendText(message);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+        logger.info("服务端推送给所有客户端 :【{}】", message);
+    }
+
+    /**
+     * 多个人发送给指定的几个用户
+     * message
+     * persons
+     */
+    public synchronized static void SendMany(String message, String[] persons) {
+        for (String userName : persons) {
+            sendMessage(message, userName);
+        }
+    }
 }

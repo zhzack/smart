@@ -1,13 +1,21 @@
 package xyz.blue.controller;
 
-import xyz.blue.server.SocketServer;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import xyz.blue.pojo.Device;
+import xyz.blue.pojo.User;
+import xyz.blue.server.SocketServer;
+import xyz.blue.service.impl.DeviceServiceImpl;
+import xyz.blue.service.impl.UserServiceImpl;
 
 import java.util.List;
+
+
+
 
 /**
  * websocket
@@ -18,10 +26,14 @@ public class WebSocketController {
 
     @Autowired
     private SocketServer socketServer;
+    @Autowired
+    UserServiceImpl userService;
+    @Autowired
+    DeviceServiceImpl deviceService;
 
     /**
-     *
      * 客户端页面
+     *
      * @return
      */
     @RequestMapping(value = "/index")
@@ -31,8 +43,8 @@ public class WebSocketController {
     }
 
     /**
-     *
      * 服务端页面
+     *
      * @param model
      * @return
      */
@@ -40,33 +52,36 @@ public class WebSocketController {
     public String admin(Model model) {
         int num = SocketServer.getOnlineNum();
         List<String> list = SocketServer.getOnlineUsers();
-
-        model.addAttribute("num",num);
-        model.addAttribute("users",list);
+        model.addAttribute("num", num);
+        User user= (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
+        List<Device> device=deviceService.queryDeviceListByUserID(user.getUser_id());
+        model.addAttribute("device", device);
         return "admin";
     }
 
     /**
      * 个人信息推送
+     *
      * @return
      */
     @RequestMapping("sendmsg")
     @ResponseBody
-    public String sendmsg(String msg, String username){
+    public String sendmsg(String msg, String client_id) {
         //第一个参数 :msg 发送的信息内容
         //第二个参数为用户长连接传的用户人数
-        String [] persons = username.split(",");
-        SocketServer.SendMany(msg,persons);
+        String[] persons = client_id.split(",");
+        SocketServer.SendMany(msg, persons);
         return "success";
     }
 
     /**
      * 推送给所有在线用户
+     *
      * @return
      */
     @RequestMapping("sendAll")
     @ResponseBody
-    public String sendAll(String msg){
+    public String sendAll(String msg) {
         SocketServer.sendAll(msg);
         return "success";
     }

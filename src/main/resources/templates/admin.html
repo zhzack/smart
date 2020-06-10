@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="UTF-8"/>
     <title>服务端</title>
@@ -22,20 +24,36 @@
 
 
 <div class="layui-row">
-    <h1 class="threed">WebSocket服务端</h1>
+    <h1 class="threed">
+        <!--/*@thymesVar id="user_name" type="xyz.blue.config.UserRealm"*/-->
+    <span th:text="${session.loginUser.user_name}"></span></h1>
     <div class="layui-col-md8 layui-col-md-offset2" style="margin-top: 20px">
-        <h1 style="margin-top: 100px">服务端</h1>
+        <h1 style="margin-top: 100px">用户：<span th:text="${session.loginUser.user_name}"></span>的管理页面</h1>
         <div class="layui-card">
             <div class="layui-card-body-inline" style="padding-bottom: 20px">
                 <div class="layui-form-item">
                     <label class="layui-form-label">在线数量:<span id="sum" th:text="${num}">0</span></label>
                 </div>
-
                 <form class="layui-form" action="">
                     <div class="layui-form-item">
-                        <label class="layui-form-label">在线人:</label>
+                        <label class="layui-form-label">我的设备:</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" th:each="user: ${users}" name="check" th:title="${user}">
+                            <label>
+                                <input type="checkbox" th:each="device: ${device}" name="check"
+                                       th:title="${device.getDevice_name()}">
+<!--                                <input type="checkbox" th:each="device: ${}" name="check"-->
+<!--                                       th:title="${device.getDevice_name()}">-->
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+
+                        <label class="layui-form-label">在线设备:</label>
+                        <div class="layui-input-block">
+                            <!--/*@thymesVar id="getDevice_name" type="xyz\blue\pojo\Device.java"*/-->
+                            <input type="checkbox" th:each="device: ${device}" name="check"
+                                   th:title="${device.getDevice_name()}+${device.getDevice_status()}">
                         </div>
                     </div>
                 </form>
@@ -65,12 +83,13 @@
 </div>
 <script type="text/javascript">
 
+
     layui.use('form', function () {
-        var form = layui.form;
+        const form = layui.form;
     });
 
     function sendMsg() {
-        var user = [];
+        let user = [];
         $("input[name='check']:checked").each(function (i) {//把所有被选中的复选框的值存入数组
             user = user + $(this).attr("title") + ","
         });
@@ -135,10 +154,9 @@
     }
 
     function connect() {
-
+        const user_name = [[${session.loginUser.user_id}]];
         const Socket = "MozWebSocket" in window ? MozWebSocket : WebSocket;
-        let ws = new Socket("ws://127.0.0.1/socketServer/blue");
-
+        let ws = new Socket("ws://127.0.0.1/socketServer/" + user_name);
 
         // if ('WebSocket' in window) {
         //     //ws = new WebSocket("ws://www.isuyu.cn:8086/socketServer/niezhiliang9595");

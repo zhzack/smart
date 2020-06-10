@@ -13,7 +13,7 @@ public interface UserService {
     //    通过name查询用户
     User queryUserByName(String name);
     //    添加用户
-    int addUser(User users);
+    Object addUser(User users);
     //  修改用户
     int updateUser(User users);
     //   删除用户

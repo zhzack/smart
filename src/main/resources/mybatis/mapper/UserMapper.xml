@@ -4,26 +4,30 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xyz.blue.mapper.UserMapper">
 
-    <select id="queryUserList" resultType="User">
+    <select id="queryUserList" resultType="xyz.blue.pojo.User">
         select *
         from user
     </select>
-    <select id="queryUserByID" parameterType="int" resultType="User">
+
+
+    <select id="queryUserByID" parameterType="int" resultType="xyz.blue.pojo.User">
         select *
         from user
         where user_id = #{id}
     </select>
-    <select id="queryUserByName" parameterType="String" resultType="User">
+
+    <select id="queryUserByName" parameterType="String" resultType="xyz.blue.pojo.User">
         select *
         from user
         where user_name = #{name}
     </select>
-    <select id="addUser" resultType="User">
-        insert into user(user_id, user_name, user_pwd)
-        values (#{id}, #{user_name}, #{user_pwd})
+
+    <select id="addUser" resultType="java.lang.Object">
+        insert into user( user_name, user_pwd)
+        values (#{user_name}, #{user_pwd})
     </select>
 
-    <select id="updateUser" resultType="User">
+    <select id="updateUser" resultType="java.lang.Integer">
         update user
         set user_name= #{user_name},
             user_pwd = #{user_pwd}

@@ -3,25 +3,20 @@ package xyz.blue.entity;
 import javax.websocket.Session;
 import java.io.Serializable;
 
-/**
- * @Author NieZhiLiang
- * @Email nzlsgg@163.com
- * @Date 2019/3/1 上午9:08
- */
 public class Client implements Serializable {
 
     private static final long serialVersionUID = 8957107006902627635L;
 
-    private String userName;
+    private String client_id;
 
     private Session session;
 
-    public String getUserName() {
-        return userName;
+    public String getClient_id() {
+        return client_id;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setClient_id(String client_id) {
+        this.client_id = client_id;
     }
 
     public Session getSession() {
@@ -32,8 +27,8 @@ public class Client implements Serializable {
         this.session = session;
     }
 
-    public Client(String userName, Session session) {
-        this.userName = userName;
+    public Client(String client_id, Session session) {
+        this.client_id = client_id;
         this.session = session;
     }
 

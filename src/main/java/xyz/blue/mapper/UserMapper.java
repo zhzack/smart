@@ -20,7 +20,7 @@ public interface UserMapper {
     User queryUserByName(String name);
 
     //    添加用户
-    int addUser(User user);
+    Object addUser(User user);
 
     //  修改用户
     int updateUser(User user);

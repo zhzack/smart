@@ -5,14 +5,18 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import xyz.blue.pojo.Device;
 import xyz.blue.pojo.User;
+import xyz.blue.service.impl.DeviceServiceImpl;
 import xyz.blue.service.impl.UserServiceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -20,13 +24,10 @@ import java.util.List;
 public class DashboardController {
 
 
-    public DashboardController(UserServiceImpl userService) {
-        this.userService = userService;
-    }
-
-
-    final
+    @Autowired
     UserServiceImpl userService;
+    @Autowired
+    DeviceServiceImpl deviceService;
 
     @GetMapping("/que")
     @ResponseBody
@@ -36,6 +37,47 @@ public class DashboardController {
         System.out.println(usersList.toString());
         return usersList;
     }
+
+    @GetMapping("/insert")
+    @ResponseBody
+    public String insert() {
+
+        User user = new User("test", "qwe");
+//        int i = userService.addUser(user);
+        System.out.println(userService.addUser(user) + "66666");
+        return userService.addUser(user) + "66666";
+    }
+
+    @GetMapping("/t")
+    @ResponseBody
+    public String test_sql() {
+
+        List<Device> devices = deviceService.queryDeviceList();
+
+        Device device = devices.get(3);
+
+//        deviceService.del_deviceById(3);
+
+        device.setDevice_name("test111");
+        device.setUser_id(101879);
+        deviceService.insert_device(device);
+
+        device.setDevice_name("test222");
+//        device.setDevice_id(null);
+        device.setUser_id(101879);
+        //deviceService.update_deviceById(device);
+
+        List<Device> devicesS = deviceService.queryDeviceList();
+
+        ArrayList devicesSS = new ArrayList();
+
+        for (Device devic:devices) {
+
+            devicesSS.add("<h1>"+devic+"\n\n\n\n\n</h1>");
+        }
+        return devicesSS.toString();
+    }
+
 
     @GetMapping("/quer")
     @ResponseBody
@@ -57,6 +99,7 @@ public class DashboardController {
     public String index() {
         return "index";
     }
+
     //        registry.addViewController("/login.html").setViewName("/pages/samples/login-2");
     //        registry.addViewController("/").setViewName("/pages/samples/login-2");
     @RequestMapping({"/", "login.html"})
@@ -64,6 +107,15 @@ public class DashboardController {
         return "/pages/samples/login-2";
     }
 
+    @GetMapping("/device")
+    @ResponseBody
+    public List<Device> devices_list() {
+
+        List<Device> device = deviceService.queryDeviceList();
+        device.addAll(deviceService.queryDeviceListByUserID(101878));
+        System.out.println(device.toString());
+        return device;
+    }
 
     @RequestMapping("/login")
     public String login(String username, String password, Model model) {
@@ -71,8 +123,7 @@ public class DashboardController {
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password);
         try {//登录成功
             subject.login(usernamePasswordToken);
-
-            return "redirect:/dashborad.html";
+            return "redirect:/admin";
         } catch (UnknownAccountException e) {//用户名不存在
 
             model.addAttribute("msg", "用户名不存在");
