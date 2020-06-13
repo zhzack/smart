@@ -32,7 +32,8 @@ public class WebSocketController {
     @Autowired
     DeviceServiceImpl deviceService;
 
-    NowDate nowdate=new NowDate();
+    NowDate nowdate = new NowDate();
+
     /**
      * 客户端页面
      *
@@ -57,6 +58,13 @@ public class WebSocketController {
 
         //获取当前登录用户信息
         User user = this.getUser();
+        try {
+            Integer user_id = user.getUser_id();
+        } catch (NullPointerException e) {
+            System.out.println(nowdate.nowDate() + "用户未登录");
+            return "redirect:login";
+        }
+
         //查询当前登录用户拥有设备
         List<Device> device = getDevice(user.getUser_id());
         //在线设备
@@ -67,7 +75,7 @@ public class WebSocketController {
         //在线设备数量
         model.addAttribute("num", deviceOnLines.size());
         model.addAttribute("deviceOnLines", deviceOnLines);
-        return "admin";
+        return "smart";
     }
 
 
@@ -85,6 +93,22 @@ public class WebSocketController {
         SocketServer.SendMany(msg, persons);
         return "success";
     }
+
+
+    @RequestMapping("devicesendmsg")
+    @ResponseBody
+    public String devicesendmsg(String msg, String client_id) {
+        int User_id;
+        try {
+            User_id = deviceService.query_deviceById(Integer.parseInt(client_id)).getUser_id();
+            String[] persons = client_id.split(",");
+            SocketServer.SendMany(msg, persons);
+        } catch (NullPointerException e) {
+            return "未注册从设备";
+        }
+        return User_id+"";
+    }
+
 
     @RequestMapping("addDevice")
     @ResponseBody
@@ -107,27 +131,32 @@ public class WebSocketController {
     public String queryUserId(int deviceId) {
         Object object = null;
 
-        if(deviceId!=0){
+        if (deviceId != 0) {
 
             try {
-                 object=deviceService.query_deviceById(deviceId).getUser_id();
+                object = deviceService.query_deviceById(deviceId).getUser_id();
             } catch (NullPointerException e) {
                 //e.printStackTrace();
-                System.out.println(nowdate.nowDate()+"未注册设备登陆");
+                System.out.println(nowdate.nowDate() + "未注册设备登陆");
             }
 
-            if(object==null){
+            if (object == null) {
 
-                return nowdate.nowDate()+"未绑定账户，请进入管理员页面添加";
+                return nowdate.nowDate() + "未绑定账户，请进入管理员页面添加";
             } else {
-                return  object.toString();
+                return object.toString();
             }
 
-        }else {
+        } else {
             return "请输入设备id";
         }
 
 
+    }
+
+    @RequestMapping("smart")
+    public String smart(Model model) {
+        return "smart";
     }
 
     /**

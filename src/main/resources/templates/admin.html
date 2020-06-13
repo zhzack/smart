@@ -139,7 +139,7 @@
             '                        <input id="DeviceName" type="text" name="device" required lay-verify="required" placeholder="设备名称"\n' +
             '                               autocomplete="off" class="layui-input">\n' +
             '\n' +
-            '                        <input id="DeviceId" type="text" name="device" required lay-verify="required" placeholder="设备mac"\n' +
+            '                        <input id="DeviceId" type="text" name="device" required lay-verify="required" placeholder="设备id"\n' +
             '                               autocomplete="off" class="layui-input">' +
             '<button class="layui-btn" onclick="addDevice()">添加设备</button>\n' +
             '                    </div>\n' +
@@ -166,7 +166,7 @@
                         if (data === "success") {
                             let obj = document.getElementById("addDevice");
                             obj.innerHTML = "";
-                            alert("添加成功");
+                            alert("添加成功" + data);
                             location.reload();
                         } else {
                             alert("添加失败，请检查设备是否已经绑定" + data);
@@ -210,6 +210,15 @@
         const Socket = "MozWebSocket" in window ? MozWebSocket : WebSocket;
         let ws = new Socket("ws://127.0.0.1/socketServer/" + user_name);
 
+        // if ('WebSocket' in window) {
+        //     //ws = new WebSocket("ws://www.isuyu.cn:8086/socketServer/niezhiliang9595");
+        //     ws = new WebSocket("ws://127.0.0.1/socketServer/niezhiliang9595");
+        // } else if ('MozWebSocket' in window) {
+        //     //ws = new MozWebSocket("ws://www.isuyu.cn:8086/socketServer/niezhiliang9595");
+        //     ws = new MozWebSocket("ws://127.0.0.1/socketServer/niezhiliang9595");
+        // } else {
+        //     alert("该浏览器不支持websocket");
+        // }
         ws.onmessage = function (evt) {
             var content = $("#content").html();
             $("#content").html(content + '<div style="text-align: right;margin-bottom: 8px">\n' +

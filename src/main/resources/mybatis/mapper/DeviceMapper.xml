@@ -13,6 +13,7 @@
         insert into device_log(status, device_id)
         values (#{status}, #{device_id})
     </insert>
+
     <update id="update_deviceById">
         update device
         set device_name=#{device_name}
