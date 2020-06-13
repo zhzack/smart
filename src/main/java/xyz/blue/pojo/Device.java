@@ -13,6 +13,7 @@ public class Device {
     private String device_name;
     private Integer user_id;
     private boolean status;
+    private String device_mac;
 
     public Device() {
     }
@@ -38,6 +39,14 @@ public class Device {
         this.device_name = device_name;
         this.user_id = user_id;
         this.status = status;
+    }
+
+
+
+    public Device(String device_name, String device_mac, Integer user_id) {
+        this.device_name = device_name;
+        this.user_id = user_id;
+        this.device_mac = device_mac;
     }
 
     public String getDevice_id() {
@@ -81,4 +90,11 @@ public class Device {
                 '}';
     }
 
+    public String getDevice_mac() {
+        return device_mac;
+    }
+
+    public void setDevice_mac(String device_mac) {
+        this.device_mac = device_mac;
+    }
 }

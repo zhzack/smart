@@ -22,8 +22,9 @@ public interface DeviceMapper {
     //日志记录
     void insert_deviceLog(Device device);
 
+
     //通过设备id查找设备
-    void query_deviceById(int deviceId);
+    Device query_deviceById(int deviceId);
 
     //删除设备
     void del_deviceById(int deviceId);

@@ -1,5 +1,8 @@
 package xyz.blue.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -48,6 +51,21 @@ public class DashboardController {
         return userService.addUser(user) + "66666";
     }
 
+    @GetMapping("/j")
+    @ResponseBody
+    public String string() {
+        //从字符串解析JSON对象
+        JSONObject obj = JSON.parseObject("{\"runoob\":\"菜鸟教程\"}");
+        //从字符串解析JSON数组
+        JSONArray arr = JSON.parseArray("[\"菜鸟教程\",\"RUNOOB\"]\n");
+
+        //将JSON对象转化为字符串
+        String objStr = JSON.toJSONString(obj);
+        //将JSON数组转化为字符串
+        String arrStr = JSON.toJSONString(arr);
+        return "<h1>" + obj.get("runoob.") + "</h1>" + "<h1>" + arr.get(0)+ "</h1>" + "<h1>" + arrStr + "</h1>";
+    }
+
     @GetMapping("/t")
     @ResponseBody
     public String test_sql() {
@@ -71,9 +89,9 @@ public class DashboardController {
 
         ArrayList devicesSS = new ArrayList();
 
-        for (Device devic:devices) {
+        for (Device devic : devices) {
 
-            devicesSS.add("<h1>"+devic+"\n\n\n\n\n</h1>");
+            devicesSS.add("<h1>" + devic + "\n\n\n\n\n</h1>");
         }
         return devicesSS.toString();
     }

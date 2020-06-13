@@ -31,17 +31,14 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">请输入昵称</label>
                     <div class="layui-input-inline" style="width: 300px">
-                        <input id="username" type="text" name="title" required lay-verify="required" placeholder="请输入昵称"
+                        <input id="DeviceId" type="text" name="title" required lay-verify="required" placeholder="请输入昵称"
                                autocomplete="off" class="layui-input">
                     </div>
                     <button class="layui-btn" onclick="connect()">连接</button>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">请发送内容</label>
-                    <div class="layui-input-inline" style="width: 300px">
-                        <input id="writeMsgto" type="text" name="title" required lay-verify="required"
-                               placeholder="请输入要发送的r" autocomplete="off" class="layui-input">
-                    </div>
+
                     <div class="layui-input-inline" style="width: 300px">
                         <input id="writeMsg" type="text" name="title" required lay-verify="required"
                                placeholder="请输入要发送的内容" autocomplete="off" class="layui-input">
@@ -65,41 +62,47 @@
 </div>
 
 <script type="text/javascript">
-    var ws = null;
-    var username = $("#username").val()
+
+
 
     function connect() {
-        if (username != null) {
-            $("#content").html('');
+
+        var DeviceId=$("#DeviceId").val();
+        let content=$("#content");
+        let ws = null;
+        let UserId;
+        if (DeviceId != null) {
+            content.html('');
+
             if ('WebSocket' in window) {
-                //ws = new WebSocket("ws://www.isuyu.cn:8086/socketServer/"+$("#username").val());
-                ws = new WebSocket("ws://127.0.0.1/socketServer/" + $("#username").val());
+                //ws = new WebSocket("ws://www.isuyu.cn:8086/socketServer/"+$("#DeviceId").val());
+                ws = new WebSocket("ws://127.0.0.1/socketServer/" + DeviceId);
             } else if ('MozWebSocket' in window) {
-                //ws = new MozWebSocket("ws://www.isuyu.cn:8086/socketServer/"+$("#username").val());
-                ws = new MozWebSocket("ws://127.0.0.1/socketServer/" + $("#username").val());
+                //ws = new MozWebSocket("ws://www.isuyu.cn:8086/socketServer/"+$("#DeviceId").val());
+                ws = new MozWebSocket("ws://127.0.0.1/socketServer/" + DeviceId);
             } else {
                 alert("该浏览器不支持websocket");
             }
 
 
             ws.onmessage = function (evt) {
-                var content = $("#content").html();
-                $("#content").html(content + '<div style="text-align: right;margin-bottom: 8px">\n' +
+                var content = content.html();
+                content.html(content + '<div style="text-align: right;margin-bottom: 8px">\n' +
                     '                        <p><q style="color: mediumorchid">服务端:</q><span>' + evt.data + '</span></p>\n' +
                     '                    </div>\n' +
                     '                    <br/>');
             };
 
             ws.onclose = function (evt) {
-                var content = $("#content").html();
-                $("#content").html(content + '<div style="margin-bottom: 8px">\n' +
+                var content = content.html();
+                content.html(content + '<div style="margin-bottom: 8px">\n' +
                     '                        <p><q style="color: coral">客户端:</q><span>连接中断</span></p>\n' +
                     '                    </div>\n' +
                     '                    <br/>');
             };
 
             ws.onopen = function (evt) {
-                $("#content").html('<div style="margin-bottom: 8px">\n' +
+                content.html('<div style="margin-bottom: 8px">\n' +
                     '                        <p><q style="color: coral">客户端:</q><span>连接成功...</span></p>\n' +
                     '                    </div>\n' +
                     '                    <br/>');
@@ -110,10 +113,32 @@
     }
 
     function sendMsg() {
-        ws.send($("#writeMsg").val());
+
+
+        $.ajax({
+                method: 'get',
+                url: '/queryUserId',
+                data: {
+                    deviceId: DeviceId
+                },
+                success: function (data) {
+                    alert(data);
+                }
+                , error: function () {
+                    alert("未绑定账户，请进入管理员页面添加");
+
+                }
+            }
+        )
+
+
+
+
+        let writeMsg=$("#writeMsg").val();
+        ws.send(writeMsg);
         var content = $("#content").html();
         $("#content").html(content + '<div>\n' +
-            '                        <p><q style="color: coral">客户端:</q><span>' + $("#writeMsg").val() + '</span></p>\n' +
+            '                        <p><q style="color: coral">客户端:</q><span>' + writeMsg + '</span></p>\n' +
             '                    </div>\n' +
             '                    <br/>');
     }

@@ -26,10 +26,10 @@
 <div class="layui-row">
     <h1 class="threed">
         <!--/*@thymesVar id="user_name" type="xyz.blue.config.UserRealm"*/-->
-    <span th:text="${session.loginUser.user_name}"></span></h1>
+        <span th:text="${session.loginUser.user_name}"></span></h1>
     <div class="layui-col-md8 layui-col-md-offset2" style="margin-top: 20px">
         <h1 style="margin-top: 100px">用户：<span th:text="${session.loginUser.user_name}"></span>的管理页面</h1>
-        <div class="layui-card">
+        <div class="layui-card" id="page">
             <div class="layui-card-body-inline" style="padding-bottom: 20px">
                 <div class="layui-form-item">
                     <label class="layui-form-label">在线数量:<span id="sum" th:text="${num}">0</span></label>
@@ -40,9 +40,9 @@
                         <div class="layui-input-block">
                             <label>
                                 <input type="checkbox" th:each="device: ${device}" name="check"
-                                       th:title="${device.getDevice_name()}">
-<!--                                <input type="checkbox" th:each="device: ${}" name="check"-->
-<!--                                       th:title="${device.getDevice_name()}">-->
+                                       th:title="${device.getDevice_id()}">
+                                <!--                                <input type="checkbox" th:each="device: ${}" name="check"-->
+                                <!--                                       th:title="${device.getDevice_name()}">-->
                             </label>
                         </div>
                     </div>
@@ -52,8 +52,8 @@
                         <label class="layui-form-label">在线设备:</label>
                         <div class="layui-input-block">
                             <!--/*@thymesVar id="getDevice_name" type="xyz\blue\pojo\Device.java"*/-->
-                            <input type="checkbox" th:each="device: ${device}" name="check"
-                                   th:title="${device.getDevice_name()}+${device.getDevice_status()}">
+                            <input type="checkbox" th:each="device: ${deviceOnLines}" name="check"
+                                   th:title="${device.getDevice_id()}">
                         </div>
                     </div>
                 </form>
@@ -62,12 +62,14 @@
                     <label class="layui-form-label">信息内容:</label>
                     <div class="layui-input-inline" style="width: 300px">
                         <input id="msg" type="text" name="title" required lay-verify="required" placeholder="请输入要发送的内容"
-                               autocomplete="off" class="layui-input">
+                               autocomplete="on" class="layui-input">
                     </div>
                 </div>
 
                 <button class="layui-btn" onclick="sendMsg()">发送</button>
                 <button class="layui-btn" onclick="sendAll()">全部发送</button>
+                <button class="layui-btn" onclick="addDeviceBTN()">添加设备</button>
+
             </div>
         </div>
         <div class="layui-card" style="margin-top: 100px">
@@ -113,7 +115,7 @@
                 method: 'get',
                 url: '/sendmsg',
                 data: {
-                    "username": user,
+                    "client_id": user,
                     "msg": msg
                 },
                 success: function (data) {
@@ -130,8 +132,58 @@
         }
     }
 
+    function addDeviceBTN() {
+        const divA = document.getElementById("page");
+        divA.innerHTML = divA.innerHTML + '<div class="layui-form-item" id="addDevice">\n' +
+            '                    <div class="layui-input-inline" style="width: 350px">\n' +
+            '                        <input id="DeviceName" type="text" name="device" required lay-verify="required" placeholder="设备名称"\n' +
+            '                               autocomplete="off" class="layui-input">\n' +
+            '\n' +
+            '                        <input id="DeviceId" type="text" name="device" required lay-verify="required" placeholder="设备mac"\n' +
+            '                               autocomplete="off" class="layui-input">' +
+            '<button class="layui-btn" onclick="addDevice()">添加设备</button>\n' +
+            '                    </div>\n' +
+            '                </div>';
+
+    }
+
+    function addDevice() {
+
+        let DeviceName = $("#DeviceName").val();
+        let DeviceMac = $("#DeviceId").val();
+
+        if (DeviceMac == null || DeviceName == null) {
+            alert("您的输入有误，请检查后重新输入");
+        } else {
+            $.ajax({
+                    method: 'get',
+                    url: '/addDevice',
+                    data: {
+                        DeviceName: DeviceName,
+                        DeviceMac: DeviceMac
+                    },
+                    success: function (data) {
+                        if (data === "success") {
+                            let obj = document.getElementById("addDevice");
+                            obj.innerHTML = "";
+                            alert("添加成功");
+                            location.reload();
+                        } else {
+                            alert("添加失败，请检查设备是否已经绑定" + data);
+                        }
+                    }
+                    , error: function () {
+                        alert("连接失败");
+                    }
+                }
+            )
+        }
+
+
+    }
+
     function sendAll() {
-        var msg = $("#msg").val();
+        let msg = $("#msg").val();
         if (msg != null) {
             $.ajax({
                 method: 'get',
@@ -158,15 +210,6 @@
         const Socket = "MozWebSocket" in window ? MozWebSocket : WebSocket;
         let ws = new Socket("ws://127.0.0.1/socketServer/" + user_name);
 
-        // if ('WebSocket' in window) {
-        //     //ws = new WebSocket("ws://www.isuyu.cn:8086/socketServer/niezhiliang9595");
-        //     ws = new WebSocket("ws://127.0.0.1/socketServer/niezhiliang9595");
-        // } else if ('MozWebSocket' in window) {
-        //     //ws = new MozWebSocket("ws://www.isuyu.cn:8086/socketServer/niezhiliang9595");
-        //     ws = new MozWebSocket("ws://127.0.0.1/socketServer/niezhiliang9595");
-        // } else {
-        //     alert("该浏览器不支持websocket");
-        // }
         ws.onmessage = function (evt) {
             var content = $("#content").html();
             $("#content").html(content + '<div style="text-align: right;margin-bottom: 8px">\n' +

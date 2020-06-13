@@ -9,7 +9,7 @@ import xyz.blue.entity.Client;
 import xyz.blue.pojo.User;
 import xyz.blue.service.impl.DeviceServiceImpl;
 import xyz.blue.service.impl.UserServiceImpl;
-import xyz.blue.tools.nowdate;
+import xyz.blue.tools.NowDate;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @ServerEndpoint(value = "/socketServer/{userName}")
 @Component
-public class SocketServer {
+public class SocketServer implements Runnable{
 
     private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
 
@@ -37,14 +37,14 @@ public class SocketServer {
     /**
      * 用线程安全的CopyOnWriteArraySet来存放客户端连接的信息
      */
-    private static final CopyOnWriteArraySet<Client> socketServers = new CopyOnWriteArraySet<>();
-
+    public static final CopyOnWriteArraySet<Client> socketServers = new CopyOnWriteArraySet<>();
+    public static final CopyOnWriteArraySet<String> msgs = new CopyOnWriteArraySet<>();
     /**
      * websocket封装的session,信息推送，就是通过它来信息推送
      */
     private Session session;
 
-    nowdate nowdate = new nowdate();
+    NowDate nowdate = new NowDate();
     /**
      * 服务端的userName,因为用的是set，每个客户端的username必须不一样，否则会被覆盖。
      * 要想完成ui界面聊天的功能，服务端也需要作为客户端来接收后台推送用户发送的信息
@@ -71,15 +71,15 @@ public class SocketServer {
 
 
 
-        if(client_id_int>101877){
-
-            user_log.user_onopen(client_id_int);
-
-        }else {
-
-            device_log.device_onopen(client_id_int);
-
-        }
+//        if(client_id_int>101877){
+//
+//            user_log.user_onopen(client_id_int);
+//
+//        }else {
+//
+//            device_log.device_onopen(client_id_int);
+//
+//        }
 
 
 
@@ -106,7 +106,8 @@ public class SocketServer {
 //		sendMessage(client.getUserName()+"<--"+message, String.valueOf(loginUser.getUser_id()));
 
         sendMessage(client.getClient_id() + "<--" + message, "123");
-
+        msgs.add(message);
+        this.run();
         logger.info("客户端:【{}】发送信息:{}", client.getClient_id(), message);
     }
 
@@ -221,5 +222,21 @@ public class SocketServer {
         for (String userName : persons) {
             sendMessage(message, userName);
         }
+    }
+
+    /**
+     * When an object implementing interface <code>Runnable</code> is used
+     * to create a thread, starting the thread causes the object's
+     * <code>run</code> method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method <code>run</code> is that it may
+     * take any action whatsoever.
+     *
+     * @see Thread#run()
+     */
+    @Override
+    public void run() {
+        System.out.println(msgs.toString());
     }
 }

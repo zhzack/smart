@@ -11,10 +11,11 @@ import xyz.blue.pojo.User;
 import xyz.blue.server.SocketServer;
 import xyz.blue.service.impl.DeviceServiceImpl;
 import xyz.blue.service.impl.UserServiceImpl;
+import xyz.blue.tools.NowDate;
 
+import java.util.ArrayList;
 import java.util.List;
-
-
+import java.util.Objects;
 
 
 /**
@@ -31,6 +32,7 @@ public class WebSocketController {
     @Autowired
     DeviceServiceImpl deviceService;
 
+    NowDate nowdate=new NowDate();
     /**
      * 客户端页面
      *
@@ -50,14 +52,24 @@ public class WebSocketController {
      */
     @RequestMapping(value = "/admin")
     public String admin(Model model) {
-        int num = SocketServer.getOnlineNum();
-        List<String> list = SocketServer.getOnlineUsers();
-        model.addAttribute("num", num);
-        User user= (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
-        List<Device> device=deviceService.queryDeviceListByUserID(user.getUser_id());
+//        int num = SocketServer.getOnlineNum();
+//        List<String> list = SocketServer.getOnlineUsers();
+
+        //获取当前登录用户信息
+        User user = this.getUser();
+        //查询当前登录用户拥有设备
+        List<Device> device = getDevice(user.getUser_id());
+        //在线设备
+        List<Device> deviceOnLines = getDeviceOnLines(device);
+
+
         model.addAttribute("device", device);
+        //在线设备数量
+        model.addAttribute("num", deviceOnLines.size());
+        model.addAttribute("deviceOnLines", deviceOnLines);
         return "admin";
     }
+
 
     /**
      * 个人信息推送
@@ -74,6 +86,50 @@ public class WebSocketController {
         return "success";
     }
 
+    @RequestMapping("addDevice")
+    @ResponseBody
+    //DeviceId
+    public String addDevice(String DeviceName, String DeviceMac) {
+
+        if (DeviceMac != null && DeviceName != null) {
+            Device device = new Device(DeviceName, DeviceMac, getUser().getUser_id());
+            deviceService.insert_device(device);
+            return "success";
+        } else {
+            return "fail";
+        }
+
+    }
+
+    @RequestMapping("queryUserId")
+    @ResponseBody
+    //DeviceId
+    public String queryUserId(int deviceId) {
+        Object object = null;
+
+        if(deviceId!=0){
+
+            try {
+                 object=deviceService.query_deviceById(deviceId).getUser_id();
+            } catch (NullPointerException e) {
+                //e.printStackTrace();
+                System.out.println(nowdate.nowDate()+"未注册设备登陆");
+            }
+
+            if(object==null){
+
+                return nowdate.nowDate()+"未绑定账户，请进入管理员页面添加";
+            } else {
+                return  object.toString();
+            }
+
+        }else {
+            return "请输入设备id";
+        }
+
+
+    }
+
     /**
      * 推送给所有在线用户
      *
@@ -82,7 +138,39 @@ public class WebSocketController {
     @RequestMapping("sendAll")
     @ResponseBody
     public String sendAll(String msg) {
-        SocketServer.sendAll(msg);
+
+        List<String> onLineDevice = new ArrayList<>();
+
+        for (Device deviceOnLine : getDeviceOnLines(getDevice(getUser().getUser_id()))) {
+            onLineDevice.add(deviceOnLine.getDevice_id());
+        }
+        String[] onLineDeviceS = onLineDevice.toArray(new String[0]);
+        SocketServer.SendMany(msg, onLineDeviceS);
+
         return "success";
     }
+
+    private User getUser() {
+        return (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
+    }
+
+    private List<Device> getDevice(Integer user_id) {
+
+        return deviceService.queryDeviceListByUserID(user_id);
+    }
+
+    private List<Device> getDeviceOnLines(List<Device> device) {
+        //在线设备
+        List<Device> deviceOnLines = new ArrayList<>();
+
+        SocketServer.socketServers.forEach(client -> {
+            for (Device deviceOnline : device) {
+                if (Objects.equals(client.getClient_id(), deviceOnline.getDevice_id())) {
+                    deviceOnLines.add(deviceOnline);
+                }
+            }
+        });
+        return deviceOnLines;
+    }
+
 }
