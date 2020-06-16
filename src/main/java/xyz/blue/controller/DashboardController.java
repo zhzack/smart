@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import xyz.blue.pojo.Device;
+import xyz.blue.pojo.DeviceMsg;
 import xyz.blue.pojo.User;
+import xyz.blue.service.DeviceMsgService;
 import xyz.blue.service.impl.DeviceServiceImpl;
 import xyz.blue.service.impl.UserServiceImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -31,6 +32,9 @@ public class DashboardController {
     UserServiceImpl userService;
     @Autowired
     DeviceServiceImpl deviceService;
+    @Autowired
+    DeviceMsgService deviceMsgService;
+
 
     @GetMapping("/que")
     @ResponseBody
@@ -63,37 +67,39 @@ public class DashboardController {
         String objStr = JSON.toJSONString(obj);
         //将JSON数组转化为字符串
         String arrStr = JSON.toJSONString(arr);
+        test_sql();
         return "<h1>" + obj.get("runoob.") + "</h1>" + "<h1>" + arr.get(0)+ "</h1>" + "<h1>" + arrStr + "</h1>";
     }
 
     @GetMapping("/t")
     @ResponseBody
     public String test_sql() {
-
-        List<Device> devices = deviceService.queryDeviceList();
-
-        Device device = devices.get(3);
-
-//        deviceService.del_deviceById(3);
-
-        device.setDevice_name("test111");
-        device.setUser_id(101879);
-        deviceService.insert_device(device);
-
-        device.setDevice_name("test222");
-//        device.setDevice_id(null);
-        device.setUser_id(101879);
-        //deviceService.update_deviceById(device);
-
-        List<Device> devicesS = deviceService.queryDeviceList();
-
-        ArrayList devicesSS = new ArrayList();
-
-        for (Device devic : devices) {
-
-            devicesSS.add("<h1>" + devic + "\n\n\n\n\n</h1>");
-        }
-        return devicesSS.toString();
+        deviceMsgService.insert_msg(new DeviceMsg(4, 101878, "13"));
+        return "";
+//        List<Device> devices = deviceService.queryDeviceList();
+//
+//        Device device = devices.get(3);
+//
+////        deviceService.del_deviceById(3);
+//
+//        device.setDevice_name("test111");
+//        device.setUser_id(101879);
+//        deviceService.insert_device(device);
+//
+//        device.setDevice_name("test222");
+////        device.setDevice_id(null);
+//        device.setUser_id(101879);
+//        //deviceService.update_deviceById(device);
+//
+//        List<Device> devicesS = deviceService.queryDeviceList();
+//
+//        ArrayList devicesSS = new ArrayList();
+//
+//        for (Device devic : devices) {
+//
+//            devicesSS.add("<h1>" + devic + "\n\n\n\n\n</h1>");
+//        }
+//        return devicesSS.toString();
     }
 
 
@@ -152,7 +158,26 @@ public class DashboardController {
 
             return "/pages/samples/login-2";
         }
+    }
 
+    @GetMapping("/logout")
+    @ResponseBody
+    public void logout() {
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) {
+            subject.logout(); // session 会销毁，在SessionListener监听session销毁，清理权限缓存
+        }
+    }
+
+    @GetMapping("/insertUser")
+    @ResponseBody
+    public void insertUser() {
 
     }
+
+    @RequestMapping("register-2.html")
+    public String register() {
+        return "/pages/samples/register-2";
+    }
+
 }

@@ -63,27 +63,18 @@
 
 <script type="text/javascript">
 
-
+    let ws = null;
 
     function connect() {
 
-        let DeviceId=$("#DeviceId").val();
-        let content=$("#content");
-        let ws = null;
+        let DeviceId = $("#DeviceId").val();
+        let content = $("#content");
+
         let UserId;
         if (DeviceId != null) {
             content.html('');
-
-            if ('WebSocket' in window) {
-                //ws = new WebSocket("ws://www.isuyu.cn:8086/socketServer/"+$("#DeviceId").val());
-                ws = new WebSocket("ws://127.0.0.1/socketServer/" + DeviceId);
-            } else if ('MozWebSocket' in window) {
-                //ws = new MozWebSocket("ws://www.isuyu.cn:8086/socketServer/"+$("#DeviceId").val());
-                ws = new MozWebSocket("ws://127.0.0.1/socketServer/" + DeviceId);
-            } else {
-                alert("该浏览器不支持websocket");
-            }
-
+            const Socket = "MozWebSocket" in window ? MozWebSocket : WebSocket;
+            ws = new Socket("ws://127.0.0.1/ws/" + DeviceId);
 
             ws.onmessage = function (evt) {
                 var content = content.html();
@@ -113,34 +104,34 @@
     }
 
     function sendMsg() {
-
+        let writeMsg = $("#writeMsg").val();
+        let DeviceId = $("#DeviceId").val();
+        let content = $("#content").html();
 
         $.ajax({
                 method: 'get',
-                url: '/queryUserId',
+                url: '/devicesandmsg',
                 data: {
-                    deviceId: DeviceId
+                    deviceId: DeviceId,
+                    msg: writeMsg
                 },
-                success: function (data) {
-                    alert(data);
+                success: function (to_user_id) {
+                    let jsonMsg = JSON.stringify({"msg": writeMsg, "device_id": DeviceId, "to_user_id": to_user_id});
+
+                    ws.send(jsonMsg);
+
+                    $("#content").html(content + '<div>\n' +
+                        '                        <p><q style="color: coral">客户端:</q><span>' + writeMsg + '</span></p>\n' +
+                        '                    </div>\n' +
+                        '                    <br/>');
                 }
                 , error: function () {
                     alert("未绑定账户，请进入管理员页面添加");
-
                 }
             }
         )
 
 
-
-
-        let writeMsg=$("#writeMsg").val();
-        ws.send(writeMsg);
-        var content = $("#content").html();
-        $("#content").html(content + '<div>\n' +
-            '                        <p><q style="color: coral">客户端:</q><span>' + writeMsg + '</span></p>\n' +
-            '                    </div>\n' +
-            '                    <br/>');
     }
 </script>
 </body>

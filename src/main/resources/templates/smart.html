@@ -44,137 +44,145 @@
 
         <!-- partial -->
         <div class="main-panel">
-            <div class="content-wrapper">
+            <div class="content-wrapper" id="DevicesShow">
                 <div class="row">
                     <div class="col-md-12 grid-margin">
                         <div class="d-flex justify-content-between flex-wrap">
                             <div class="d-flex align-items-end flex-wrap">
                                 <div class="mr-md-3 mr-xl-5">
-                                    <h2>Welcome back,</h2>
-                                    <p class="mb-md-0">Your analytics dashboard template.</p>
+                                    <h2>Welcome back</h2>
                                 </div>
-                                <div class="d-flex">
-                                    <i class="mdi mdi-home text-muted hover-cursor"></i>
-                                    <p class="text-muted mb-0 hover-cursor">&nbsp;/&nbsp;Dashboard&nbsp;/&nbsp;</p>
-                                    <p class="text-primary mb-0 hover-cursor">Analytics</p>
+
+
+                            </div>
+                        </div>
+                        <div class="col-2 float-right">
+                            <button type="button" class="btn btn-secondary btn-rounded btn-fw"
+                                    onclick="addDeviceBTN()">添加设备
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 grid-margin stretch-card" th:if="${deviceOnLines.size()}!=0">
+                        <div class="card-header">
+                            <div class="card-body dashboard-tabs p-0">
+                                <ul class="nav nav-tabs px-4" role="tablist">
+                                    <li class="nav-item" th:each="deviceOnLine: ${deviceOnLines}">
+                                        <button type="button" class="btn btn-inverse-danger btn-fw btn-rounded"
+                                                th:id="${deviceOnLine.getDevice_id()}+'-btn'"
+                                                th:text="${deviceOnLine.getDevice_name()}"
+                                                th:value="${deviceOnLine.getDevice_id()}"
+                                                onclick="deviceShow(value)"
+                                        >Device
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12 grid-margin stretch-card" id="deviceShow">
+                        <div class="col-md-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="chartjs-size-monitor"
+                                         style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                        <div class="chartjs-size-monitor-expand"
+                                             style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                                        </div>
+                                        <div class="chartjs-size-monitor-shrink"
+                                             style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                            <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                                        </div>
+                                    </div>
+                                    <!--                                    <p class="card-title">Cash deposits</p>-->
+                                    <!--                                    <p class="mb-4">To start a blog, think of a topic about and first brainstorm party is ways to write-->
+                                    <!--                                        details</p>-->
+                                    <div id="cash-deposits-chart-legend" class="d-flex justify-content-center pt-3">
+                                        <ul class="dashboard-chart-legend">
+                                            <li><span style="background-color: #ff4747 "></span>Returns</li>
+                                            <li><span style="background-color: #4d83ff "></span>Sales</li>
+                                            <li><span style="background-color: #ffc100 "></span>Loss</li>
+                                        </ul>
+                                    </div>
+                                    <canvas id="cash-deposits-chart" width="475" height="237"
+                                            class="chartjs-render-monitor"
+                                            style="display: block; width: 475px; height: 237px;"></canvas>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-2 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="card-title" id="noParameter_device">
+                                        <div class="card-title grid-margin-xl-0">
+                                            <button type="button" class="btn btn-block btn-dark">开关控制</button>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-between align-items-end flex-wrap">
-                                <button type="button" class="btn btn-light bg-white btn-icon mr-3 d-none d-md-block ">
-                                    <i class="mdi mdi-download text-muted"></i>
-                                </button>
-                                <button type="button" class="btn btn-light bg-white btn-icon mr-3 mt-2 mt-xl-0">
-                                    <i class="mdi mdi-clock-outline text-muted"></i>
-                                </button>
-                                <button type="button" class="btn btn-light bg-white btn-icon mr-3 mt-2 mt-xl-0">
-                                    <i class="mdi mdi-plus text-muted"></i>
-                                </button>
-                                <button class="btn btn-primary mt-2 mt-xl-0">Download report</button>
+                        </div>
+                        <div class="col-md-4 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <div class="card-title">
+                                        <div class="card-title">
+                                            <button type="button" class="btn btn-block btn-dark">变量控制</button>
+                                        </div>
+
+                                        <div class="card-outline-primary" id="parameter_device">
+
+                                        </div>
+
+
+                                    </div>
+                                    <div class="card-title">
+                                        <div class="card-body" id="parameter_msg">
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body dashboard-tabs p-0">
-                                <ul class="nav nav-tabs px-4" role="tablist" >
-                                    <li class="nav-item" th:each="deviceOnLine: ${deviceOnLines}">
-                                        <a class="nav-link active" th:id="${deviceOnLine.getDevice_id()}+'-tab'" data-toggle="tab" th:href="@{'#'+${deviceOnLine.getDevice_id()}}"
-                                           role="tab" aria-controls="overview" aria-selected="true"
-                                           th:text="${deviceOnLine.getDevice_name()}">Overview</a>
-                                    </li>
+                    <div class="card-header">
+                        在线设备
+                    </div>
 
-                                </ul>
+                    <div class="col" id="OnLineDevices">
 
-                                <div class="tab-content py-0 px-0" th:each="deviceOnLine: ${deviceOnLines}">
-                                    <div class="tab-pane fade show active" th:id="${deviceOnLine.getDevice_id()}"  role="tabpanel"
-                                         th:aria-labelledby="${deviceOnLine.getDevice_id()}+'-tab'">
-                                        <div class="d-flex flex-wrap justify-content-xl-between">
-                                            <div class="d-none d-xl-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <div class="layui-col-md8 layui-col-md-offset2"
-                                                     style="margin-top: 20px">
-                                                    <h1 style="margin-top: 100px">用户：<span
-                                                            th:text="${session.loginUser.user_name}"></span>的管理页面</h1>
-                                                    <div class="layui-card" id="page1">
-                                                        <div class="layui-card-body-inline"
-                                                             style="padding-bottom: 20px">
-                                                            <div class="layui-form-item">
-                                                                <label class="layui-form-label">在线数量:<span id="sum"
-                                                                                                           th:text="${num}">0</span></label>
-                                                            </div>
-                                                            <form class="layui-form" action="">
-                                                                <div class="layui-form-item">
-                                                                    <label class="layui-form-label">我的设备:</label>
-                                                                    <div class="layui-input-block">
-                                                                        <label>
-                                                                            <input type="checkbox"
-                                                                                   th:each="device: ${device}"
-                                                                                   name="check"
-                                                                                   th:title="${device.getDevice_id()}">
-                                                                            <!--                                <input type="checkbox" th:each="device: ${}" name="check"-->
-                                                                            <!--                                       th:title="${device.getDevice_name()}">-->
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
+                    </div>
+                </div>
 
-                                                                <div class="layui-form-item">
 
-                                                                    <label class="layui-form-label">在线设备:</label>
-                                                                    <div class="layui-input-block">
-                                                                        <!--/*@thymesVar id="getDevice_name" type="xyz\blue\pojo\Device.java"*/-->
-                                                                        <input type="checkbox"
-                                                                               th:each="device: ${deviceOnLines}"
-                                                                               name="check"
-                                                                               th:title="${device.getDevice_id()}">
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-
-                                                            <div class="layui-form-item">
-                                                                <label class="layui-form-label">信息内容:</label>
-                                                                <div class="layui-input-inline" style="width: 300px">
-                                                                    <input id="msg" type="text" name="title" required
-                                                                           lay-verify="required" placeholder="请输入要发送的内容"
-                                                                           autocomplete="on" class="layui-input">
-                                                                </div>
-                                                            </div>
-
-                                                            <button class="layui-btn" onclick="sendMsg()">发送</button>
-                                                            <button class="layui-btn" onclick="sendAll()">全部发送</button>
-                                                            <button class="layui-btn" onclick="addDeviceBTN()">添加设备
-                                                            </button>
-
-                                                        </div>
-                                                    </div>
-                                                    <div class="layui-card" style="margin-top: 100px">
-                                                        <div class="layui-card-header">
-                                                            <h1>操作详情</h1>
-                                                        </div>
-
-                                                        <div id="content" class="layui-card-body"
-                                                             placeholder="请输入要发送的内容">
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
+                <div class="row">
+                    <div class="card-header">
+                        全部设备
+                    </div>
+                    <div class="card-body" id="AllDevices">
                     </div>
                 </div>
             </div>
+
+
         </div>
-
+        <div class="card-body">
+        </div>
     </div>
-    <!-- content-wrapper ends -->
 
-    <!-- partial -->
+</div>
+
+</div>
+<!-- content-wrapper ends -->
+
+<!-- partial -->
 </div>
 <!-- main-panel ends -->
 </div>
@@ -200,15 +208,239 @@
 <script th:src="@{js/data-table.js}"></script>
 <script th:src="@{js/jquery.dataTables.js}"></script>
 <script th:src="@{js/dataTables.bootstrap4.js}"></script>
+<!--<script th:src="@{../static/js/ws.js}"></script>-->
 <!-- End custom js for this page-->
-
-
 <script type="text/javascript">
+    parameter_device()
+    devices()
+    connect()
+
+    function sand_parameter_msg() {
+
+    }
+
+    function sand_no_parameter_msg(ss, dd) {
+
+        asd = document.getElementById(ss + "_" + dd);
+        // alert(ss+""+dd+"asd"+document.getElementById(ss+"_"+dd).getAttribute("child_device_name"));
 
 
-    layui.use('form', function () {
-        const form = layui.form;
-    });
+        let device_id = asd.getAttribute("device_id");
+
+        let child_device_id = asd.getAttribute("child_device_id");
+
+        let child_device_name = asd.getAttribute("child_device_name");
+
+        $.ajax({
+                method: 'get',
+                url: '/UserSandMsg',
+                data: {
+                    deviceId: device_id,
+                    msg: child_device_name
+                },
+                success: function (to_user_id) {
+                    let jsonMsg = JSON.stringify({
+                        "msg": child_device_name,
+                        "device_id": to_user_id,
+                        "to_user_id": device_id
+                    });
+
+                    // ws.send(jsonMsg);
+
+                    $.ajax({
+                        method: 'get',
+                        url: '/sendmsg',
+                        data: {
+                            "client_id": device_id,
+                            "msg": child_device_name
+                        },
+                        success: function (data) {
+
+                            console.log(data);
+                        }
+                    })
+                    $("#content").html(content + '<div>\n' +
+                        '                        <p><q style="color: coral">客户端:</q><span>' + writeMsg + '</span></p>\n' +
+                        '                    </div>\n' +
+                        '                    <br/>');
+                }
+                , error: function () {
+                    alert("未绑定账户，请进入管理员页面添加");
+                }
+            }
+        )
+
+
+        // alert(child_device_name + "asd");
+        // let jsonMsg = JSON.stringify({"msg": "卧室灯", "device_id": 101878, "to_user_id": 4});
+        // ws.send(jsonMsg);
+
+    }
+
+    function noParameter_device(device_id) {
+        let OnLineDevicesShow_ = document.getElementById("OnLineDevicesKeyShow_" + device_id);
+        $.ajax({
+            method: 'get',
+            url: '/q_cd_byId',
+            dataType: "json",
+            data: {
+                "device_id": device_id
+            },
+            success: function (data) {
+                // OnLineDevicesShow_.innerHTML = "";
+                data.forEach(function (child_device) {
+                    OnLineDevicesShow_.innerHTML = OnLineDevicesShow_.innerHTML +
+                        "<button class='btn btn-block btn-dark' " +
+                        "device_id='" + child_device.device_id + "'" +
+                        "child_device_id='" + child_device.child_device_id + "'" +
+                        "child_device_name='" + child_device.child_device_name + "'" +
+                        "onclick='sand_no_parameter_msg(" + child_device.device_id + "," + child_device.child_device_id + ")'" +
+                        " id=" + child_device.device_id + "_" + child_device.child_device_id + " >"
+                        + child_device.child_device_name + "</button>";
+                })
+
+                console.log(data);
+            }
+        })
+        // noParameter_device.innerHTML = noParameter_device.innerHTML + "<div class=\"card-outline-primary\">\n" +
+        //     "                                            <button type=\"button\" class=\"btn btn-inverse-success btn-block btn-fw\" " +
+        //     "id='4' name='卧室灯' onclick='sand_no_parameter_msg(4,'卧室灯')' >卧室灯\n" +
+        //     "                                            </button>\n" +
+        //     "                                        </div>\n" +
+        //     "                                        <div class=\"card-outline-primary border-left-0 grid-margin-xl-0\">\n" +
+        //     "                                            <button type=\"button\" class=\"btn btn-inverse-primary btn-block btn-fw\">客厅灯\n" +
+        //     "                                            </button>\n" +
+        //     "                                        </div>";
+    }
+
+    function parameter_device() {
+        let parameter_device = document.getElementById("parameter_device");
+        parameter_device.innerHTML = "<button type=\"button\" class=\"btn btn-inverse-warning btn-block btn-fw\"\n" +
+            "                                            onclick=\"parameter_msg()\">\n" +
+            "                                                客厅空调\n" +
+            "                                            </button>";
+
+    }
+
+    function parameter_msg() {
+        let parameter_msg = document.getElementById("parameter_msg");
+        parameter_msg.innerHTML = "<form class=\"forms-sample\">\n" +
+            "                                                <div class=\"card-title\">\n" +
+            "                                                <button type=\"button\" class=\"btn btn-block btn-light btn-large\">空调设置</button>\n" +
+            "                                                </div>\n" +
+            "                                                <div class=\"form-group row\">\n" +
+            "                                                    <label for=\"exampleInputUsername2\"\n" +
+            "                                                           class=\"col-sm-3 col-form-label\">温度</label>\n" +
+            "                                                    <div class=\"col-sm-9\">\n" +
+            "                                                        <input type=\"text\" class=\"form-control\"\n" +
+            "                                                               id=\"exampleInputUsername2\" placeholder=\"温度（16-30）\">\n" +
+            "                                                    </div>\n" +
+            "                                                </div>\n" +
+            "\n" +
+            "                                                <div class=\"form-group row\" id=\"input_data\">\n" +
+            "                                                    <label for=\"exampleFormControlSelect2\"\n" +
+            "                                                           class=\"col-sm-3 col-form-label\">模式</label>\n" +
+            "                                                    <div class=\"col-sm-9\">\n" +
+            "                                                        <select class=\" form-control\"\n" +
+            "                                                                id=\"exampleFormControlSelect2\">\n" +
+            "                                                            <option>制冷</option>\n" +
+            "                                                            <option>制暖</option>\n" +
+            "                                                            <option>换气</option>\n" +
+            "                                                        </select>\n" +
+            "                                                    </div>\n" +
+            "                                                </div>\n" +
+            "                                                <button type=\"button\" class=\"btn btn-block btn-dark\">完成设置</button>\n" +
+            "\n" +
+            "                                            </form>"
+
+    }
+
+    function deviceShow(deviceId) {
+        let deviceShow = document.getElementById("deviceShow");
+        deviceShow.innerHTML = "<h1>123456</h1>";
+    }
+
+    function devices() {
+        let onLineDevices = document.getElementById("device-online");
+        let Devices = document.getElementById("device-all");
+        let onLine_sum = document.getElementById("onLine_sum");
+        let OnLineDevices = document.getElementById("OnLineDevices");
+        let AllDevices = document.getElementById("AllDevices");
+        $.ajax({
+            method: 'get',
+            url: '/getDevicesByUserId',
+            dataType: "json",
+            success: function (data) {
+                Devices.innerHTML = "";
+                onLineDevices.innerHTML = "";
+                AllDevices.innerHTML = "";
+                OnLineDevices.innerHTML = "";
+                data.devices.forEach(function (item) {
+                        Devices.innerHTML = Devices.innerHTML + "<ul class=\"nav flex-column sub-menu\" >\n" +
+                            "                    <li class=\"nav-item\"><a class=\"nav-link\" href=\"#" + item.device_id + " \">" + item.device_name + "</a>\n" +
+                            "                    </li>\n" +
+                            "                </ul>";
+                        AllDevices.innerHTML = AllDevices.innerHTML + "<div class=\"card-title\" id=\"AllDevicesShow_" + item.device_id + "\">" +
+                            "<div class='card-header'>" + item.device_name + "</div></div>";
+                    }
+                )
+                data.devicesOnLine.forEach(function (item) {
+                    onLineDevices.innerHTML = onLineDevices.innerHTML + "<ul class=\"nav flex-column sub-menu\" >\n" +
+                        "                    <li class=\"nav-item\"><a class=\"nav-link\" href=\"#" + item.device_id + " \">" + "<spam class=\"menu-title\">" + item.device_name + "</spam></a>\n" +
+                        "                    </li>\n" +
+                        "                </ul>";
+                    OnLineDevices.innerHTML = OnLineDevices.innerHTML + "<div class=\"card \">\n" +
+                        "                            <div class=\"card-header \">\n" +
+                        "                                " + item.device_name + "\n" +
+                        "                            </div>\n" +
+                        "                            <div class=\"card-body\">\n" +
+                        "                                <div class=\"col-md-12 grid-margin stretch-card\">\n" +
+                        "                                    <div class=\"col-md-5  stretch-card\">\n" +
+                        "                                        <div class=\"card\">\n" +
+                        "                                            <div class=\"card-header\">接收收据</div>\n" +
+                        "                                            <div class=\"card-body\" " +
+                        "id='OnLineDevicesDataShow_" + item.device_id + "'></div>\n" +
+                        "                                            <div class=\"card-footer\"></div>\n" +
+                        "                                        </div>\n" +
+                        "                                    </div>\n" +
+                        "                                    <div class=\"col-md-3  stretch-card\">\n" +
+                        "                                        <div class=\"card\">\n" +
+                        "                                            <div class=\"card-header\">按键控制</div>\n" +
+                        "                                            <div class=\"card-body\" " +
+                        "id='OnLineDevicesKeyShow_" + item.device_id + "'></div>\n" +
+                        "                                            <div class=\"card-footer\"></div>\n" +
+                        "                                        </div>\n" +
+                        "                                    </div>\n" +
+                        "                                    <div class=\"col-md-4  stretch-card\">\n" +
+                        "                                        <div class=\"card\">\n" +
+                        "                                            <div class=\"card-header\">多参数控制</div>\n" +
+                        "                                            <div class=\"card-body\"></div>\n" +
+                        "                                            <div class=\"card-footer\"></div>\n" +
+                        "                                        </div>\n" +
+                        "                                    </div>\n" +
+
+                        "                            </div>\n" +
+                        "                        </div>";
+                    // OnLineDevices.innerHTML = OnLineDevices.innerHTML + "<div class=\"card-title\" id=\"OnLineDevicesShow_" + item.device_id + "" +
+                    //     "\"><div class='card-header'>" + item.device_name + "</div>" +
+                    //     "<div class=\"col-md-3 grid-margin stretch-card\"><div" +
+                    //     " class='card-title'>按键</div><div class='card-body' id=\"OnLineDevicesKeyShow_" + item.device_id + "" +
+                    //     "\" </div></div>";
+                })
+                data.devicesOnLine.forEach(function (item) {
+                        noParameter_device(item.device_id);
+                    }
+                )
+                onLine_sum.innerHTML = data.devicesOnLine.length;
+                //let deviceData=JSON.parse(data);
+                // setTimeout(devices, 3000);
+                // console.log(data.devices[0]);
+                // console.log(data.devicesOnLine);
+                // console.log(data);
+            }
+        })
+
+    }
 
     function sendMsg() {
         let user = [];
@@ -328,24 +560,14 @@
     function connect() {
         const user_name = [[${session.loginUser.user_id}]];
         const Socket = "MozWebSocket" in window ? MozWebSocket : WebSocket;
-        let ws = new Socket("ws://127.0.0.1/socketServer/" + user_name);
+        let ws = new Socket("ws://127.0.0.1/ws/" + user_name);
 
-        // if ('WebSocket' in window) {
-        //     //ws = new WebSocket("ws://www.isuyu.cn:8086/socketServer/niezhiliang9595");
-        //     ws = new WebSocket("ws://127.0.0.1/socketServer/niezhiliang9595");
-        // } else if ('MozWebSocket' in window) {
-        //     //ws = new MozWebSocket("ws://www.isuyu.cn:8086/socketServer/niezhiliang9595");
-        //     ws = new MozWebSocket("ws://127.0.0.1/socketServer/niezhiliang9595");
-        // } else {
-        //     alert("该浏览器不支持websocket");
-        // }
         ws.onmessage = function (evt) {
             var content = $("#content").html();
             $("#content").html(content + '<div style="text-align: right;margin-bottom: 8px">\n' +
                 '                        <p><q style="color: mediumorchid;text-align: right">' + evt.data + '</span></p>\n' +
                 '                    </div>\n' +
                 '                    <br/>');
-            console.log(msg)
         };
 
         ws.onclose = function (evt) {
@@ -362,7 +584,7 @@
         };
     }
 
-    connect()
+
 </script>
 
 </body>

@@ -6,9 +6,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.blue.entity.Client;
+import xyz.blue.pojo.DeviceMsg;
 import xyz.blue.pojo.User;
 import xyz.blue.service.impl.DeviceServiceImpl;
 import xyz.blue.service.impl.UserServiceImpl;
+import xyz.blue.tools.DeviceJsonToDeviceMsg;
 import xyz.blue.tools.NowDate;
 
 import javax.websocket.*;
@@ -16,12 +18,13 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
-@ServerEndpoint(value = "/socketServer/{userName}")
+@ServerEndpoint(value = "/ws/{userName}")
 @Component
-public class SocketServer implements Runnable{
+public class SocketServer {
 
     private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
 
@@ -38,10 +41,11 @@ public class SocketServer implements Runnable{
      * 用线程安全的CopyOnWriteArraySet来存放客户端连接的信息
      */
     public static final CopyOnWriteArraySet<Client> socketServers = new CopyOnWriteArraySet<>();
-    public static final CopyOnWriteArraySet<String> msgs = new CopyOnWriteArraySet<>();
+
     /**
      * websocket封装的session,信息推送，就是通过它来信息推送
      */
+
     private Session session;
 
     NowDate nowdate = new NowDate();
@@ -58,32 +62,24 @@ public class SocketServer implements Runnable{
      * userName
      */
     @OnOpen
-    public void open(Session session, @PathParam(value = "userName") String client_id) {
+    public void open(Session session, @PathParam(value = "userName") Integer client_id) {
 
         this.session = session;
+        boolean noDevice = true;
+        for (Client client : socketServers) {
+            if (Objects.equals(client.getClient_id(), client_id)) {
+                noDevice = false;
+                onClose();
+                break;
+            }
+        }
+        if (noDevice) {
+            socketServers.add(new Client(client_id, session));
 
-        socketServers.add(new Client(client_id, session));
+            logger.info(nowdate.nowDate() + "客户端:【{}】连接成功", client_id);
 
-        //更新设备状态
+        }
 
-        int client_id_int=Integer.parseInt(client_id);
-        System.out.println(client_id_int+2);
-
-
-
-//        if(client_id_int>101877){
-//
-//            user_log.user_onopen(client_id_int);
-//
-//        }else {
-//
-//            device_log.device_onopen(client_id_int);
-//
-//        }
-
-
-
-        logger.info(nowdate.nowDate() + "客户端:【{}】连接成功", client_id);
 
     }
 
@@ -96,19 +92,18 @@ public class SocketServer implements Runnable{
      */
     @OnMessage
     public void onMessage(String message) {
-
         Client client = socketServers.stream().filter(cli -> cli.getSession() == session)
                 .collect(Collectors.toList()).get(0);
+        DeviceMsg deviceMsg = DeviceJsonToDeviceMsg.ToDeviceMsg(message);
 
-//
-//		User loginUser = (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
-//
-//		sendMessage(client.getUserName()+"<--"+message, String.valueOf(loginUser.getUser_id()));
+        if (deviceMsg != null) {
+            sendMessage(client.getClient_id() + "<--" + deviceMsg.getMsg(), deviceMsg.getTo_user_id());
 
-        sendMessage(client.getClient_id() + "<--" + message, "123");
-        msgs.add(message);
-        this.run();
-        logger.info("客户端:【{}】发送信息:{}", client.getClient_id(), message);
+            logger.info("客户端:【{}】向客户端【{}】发送信息:{}", client.getClient_id(), deviceMsg.getTo_user_id(), deviceMsg.getMsg());
+        } else {
+            sendMessage("您的数据格式有误,请检查后发送<----->" + message, client.getClient_id());
+        }
+
     }
 
     /**
@@ -122,7 +117,7 @@ public class SocketServer implements Runnable{
 
                 logger.info("客户端:【{}】断开连接", client.getClient_id());
 
-                System.out.println(socketServers.stream().map(Client::getClient_id));
+//                System.out.println(socketServers.stream().map(Client::getClient_id));
 
                 socketServers.remove(client);
 
@@ -149,16 +144,14 @@ public class SocketServer implements Runnable{
      * 信息发送的方法，通过客户端的userName
      * 拿到其对应的session，调用信息推送的方法
      * message
-     * userName
+     * client_id
      */
-    public synchronized static void sendMessage(String message, String userName) {
+    public synchronized static void sendMessage(String message, int client_id) {
 
         socketServers.forEach(client -> {
-            if (userName.equals(client.getClient_id())) {
+            if ((client.getClient_id()) == client_id) {
                 try {
                     client.getSession().getBasicRemote().sendText(message);
-
-                    logger.info("客户端:【{}】发送信息:{}", client.getClient_id(), message);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -183,11 +176,12 @@ public class SocketServer implements Runnable{
 
     /**
      * 获取在线用户名，前端界面需要用到
+     *
      * @return
      */
-    public synchronized static List<String> getOnlineUsers() {
+    public synchronized static List<Integer> getOnlineUsers() {
 
-        User user= (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
+        User user = (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
 
         return socketServers.stream()
                 .map(Client::getClient_id)
@@ -218,25 +212,10 @@ public class SocketServer implements Runnable{
      * message
      * persons
      */
-    public synchronized static void SendMany(String message, String[] persons) {
-        for (String userName : persons) {
-            sendMessage(message, userName);
+    public synchronized static void SendMany(String message, int[] persons) {
+        for (int client_id : persons) {
+            sendMessage(message, client_id);
         }
     }
 
-    /**
-     * When an object implementing interface <code>Runnable</code> is used
-     * to create a thread, starting the thread causes the object's
-     * <code>run</code> method to be called in that separately executing
-     * thread.
-     * <p>
-     * The general contract of the method <code>run</code> is that it may
-     * take any action whatsoever.
-     *
-     * @see Thread#run()
-     */
-    @Override
-    public void run() {
-        System.out.println(msgs.toString());
-    }
 }

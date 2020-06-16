@@ -13,12 +13,12 @@
     function addActiveClass(element) {
       if (current === "") {
         //for root url
-        if (element.attr('href').indexOf("dashborad.html") !== -1) {
-          element.parents('.nav-item').last().addClass('active');
-          if (element.parents('.sub-menu').length) {
-            element.closest('.collapse').addClass('show');
-            element.addClass('active');
-          }
+        if (element.attr('href').indexOf("dashboard.html") !== -1) {
+            element.parents('.nav-item').last().addClass('active');
+            if (element.parents('.sub-menu').length) {
+                element.closest('.collapse').addClass('show');
+                element.addClass('active');
+            }
         }
       } else {
         //for other url

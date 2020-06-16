@@ -1,5 +1,6 @@
 package xyz.blue.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -7,8 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import xyz.blue.pojo.Device;
+import xyz.blue.pojo.DeviceMsg;
 import xyz.blue.pojo.User;
 import xyz.blue.server.SocketServer;
+import xyz.blue.service.DeviceMsgService;
 import xyz.blue.service.impl.DeviceServiceImpl;
 import xyz.blue.service.impl.UserServiceImpl;
 import xyz.blue.tools.NowDate;
@@ -31,6 +34,8 @@ public class WebSocketController {
     UserServiceImpl userService;
     @Autowired
     DeviceServiceImpl deviceService;
+    @Autowired
+    DeviceMsgService deviceMsgService;
 
     NowDate nowdate = new NowDate();
 
@@ -89,11 +94,33 @@ public class WebSocketController {
     public String sendmsg(String msg, String client_id) {
         //第一个参数 :msg 发送的信息内容
         //第二个参数为用户长连接传的用户人数
+
         String[] persons = client_id.split(",");
-        SocketServer.SendMany(msg, persons);
+        int[] clients_id = new int[persons.length];
+        for (int i = 0; i < persons.length; i++) {
+            clients_id[i] = Integer.parseInt(persons[i]);
+        }
+        SocketServer.SendMany(msg, clients_id);
         return "success";
     }
 
+    @RequestMapping("getDevicesByUserId")
+    @ResponseBody
+    public JSONObject getDevicesByUserId() {
+        JSONObject object = new JSONObject();
+        try {
+            User user = getUser();
+            List<Device> devices = getDevice(user.getUser_id());
+            List<Device> devicesOnLine = getDeviceOnLines(devices);
+
+            object.put("devices", devices);
+            object.put("devicesOnLine", devicesOnLine);
+        } catch (NullPointerException e) {
+            object.put("server", "未查询到您的设备");
+        }
+
+        return object;
+    }
 
     @RequestMapping("devicesendmsg")
     @ResponseBody
@@ -102,11 +129,16 @@ public class WebSocketController {
         try {
             User_id = deviceService.query_deviceById(Integer.parseInt(client_id)).getUser_id();
             String[] persons = client_id.split(",");
-            SocketServer.SendMany(msg, persons);
+
+            int[] clients_id = new int[persons.length];
+            for (int i = 0; i < persons.length; i++) {
+                clients_id[i] = Integer.parseInt(persons[i]);
+            }
+            SocketServer.SendMany(msg, clients_id);
         } catch (NullPointerException e) {
             return "未注册从设备";
         }
-        return User_id+"";
+        return User_id + "";
     }
 
 
@@ -125,27 +157,54 @@ public class WebSocketController {
 
     }
 
-    @RequestMapping("queryUserId")
+    @RequestMapping("noParameter_device")
+    @ResponseBody
+    public void noParameter_device() {
+
+    }
+
+    @RequestMapping("UserSandMsg")
+    @ResponseBody
+    public int UserSandMsg(int deviceId, String msg) {
+        int userId = getUser().getUser_id();
+        if (userId != 0) {
+            DeviceMsg deviceMsg = new DeviceMsg(userId, deviceId, msg);
+            System.out.println(deviceMsg);
+        }
+        return userId;
+    }
+
+    @RequestMapping("devicesandmsg")
     @ResponseBody
     //DeviceId
-    public String queryUserId(int deviceId) {
-        Object object = null;
+    public String devicesandmsg(int deviceId, String msg) {
+        int object = 0;
 
         if (deviceId != 0) {
 
             try {
                 object = deviceService.query_deviceById(deviceId).getUser_id();
+                try {
+                    DeviceMsg deviceMsg = new DeviceMsg(deviceId, object, msg);
+                    System.out.println(deviceMsg.toString());
+                    deviceMsgService.insert_msg(deviceMsg);
+                } catch (NullPointerException e) {
+                    System.out.println(nowdate.nowDate() + "插入信息失败");
+                }
+
             } catch (NullPointerException e) {
                 //e.printStackTrace();
                 System.out.println(nowdate.nowDate() + "未注册设备登陆");
             }
 
-            if (object == null) {
+            if (object == 0) {
 
                 return nowdate.nowDate() + "未绑定账户，请进入管理员页面添加";
             } else {
-                return object.toString();
+
+                return "" + object;
             }
+
 
         } else {
             return "请输入设备id";
@@ -168,24 +227,39 @@ public class WebSocketController {
     @ResponseBody
     public String sendAll(String msg) {
 
-        List<String> onLineDevice = new ArrayList<>();
+        List<Integer> onLineDevice = new ArrayList<>();
 
         for (Device deviceOnLine : getDeviceOnLines(getDevice(getUser().getUser_id()))) {
             onLineDevice.add(deviceOnLine.getDevice_id());
         }
-        String[] onLineDeviceS = onLineDevice.toArray(new String[0]);
-        SocketServer.SendMany(msg, onLineDeviceS);
+        Integer[] onLineDeviceS = onLineDevice.toArray(new Integer[0]);
+
+        int[] clients_id = new int[onLineDeviceS.length];
+        for (int i = 0; i < onLineDeviceS.length; i++) {
+            clients_id[i] = onLineDeviceS[i];
+        }
+
+        SocketServer.SendMany(msg, clients_id);
 
         return "success";
     }
 
     private User getUser() {
-        return (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
+        try {
+            return (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
+        } catch (NullPointerException e) {
+            return new User(0, "体验用户", "123");
+        }
     }
 
     private List<Device> getDevice(Integer user_id) {
 
-        return deviceService.queryDeviceListByUserID(user_id);
+        try {
+            return deviceService.queryDeviceListByUserID(user_id);
+        } catch (NullPointerException e) {
+            return new ArrayList<Device>();
+        }
+
     }
 
     private List<Device> getDeviceOnLines(List<Device> device) {

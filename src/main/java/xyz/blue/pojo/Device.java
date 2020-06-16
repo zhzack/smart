@@ -7,7 +7,7 @@ public class Device {
      * 设备名
      * 设备用户群
      * */
-    private String device_id;
+    private Integer device_id;
 
 
     private String device_name;
@@ -18,17 +18,17 @@ public class Device {
     public Device() {
     }
 
-    public Device(String device_id, boolean status) {
+    public Device(Integer device_id, boolean status) {
         this.device_id = device_id;
         this.status = status;
     }
 
-    public Device(String device_id, String device_name) {
+    public Device(Integer device_id, String device_name) {
         this.device_id = device_id;
         this.device_name = device_name;
     }
 
-    public Device(String device_id, String device_name, Integer user_id, boolean status) {
+    public Device(Integer device_id, String device_name, Integer user_id, boolean status) {
         this.device_id = device_id;
         this.device_name = device_name;
         this.user_id = user_id;
@@ -49,11 +49,11 @@ public class Device {
         this.device_mac = device_mac;
     }
 
-    public String getDevice_id() {
+    public Integer getDevice_id() {
         return device_id;
     }
 
-    public void setDevice_id(String device_id) {
+    public void setDevice_id(Integer device_id) {
         this.device_id = device_id;
     }
 

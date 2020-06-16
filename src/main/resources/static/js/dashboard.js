@@ -3,50 +3,67 @@
   $(function() {
 
     if ($('#cash-deposits-chart').length) {
-      var cashDepositsCanvas = $("#cash-deposits-chart").get(0).getContext("2d");
-      var data = {
-        labels: ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
-        datasets: [
-          {
-            label: 'Returns',
-            data: [27, 35, 30, 40, 52, 48, 54, 46, 70],
-            borderColor: [
-              '#ff4747'
-            ],
-            borderWidth: 2,
-            fill: false,
-            pointBackgroundColor: "#fff"
-          },
-          {
-            label: 'Sales',
-            data: [29, 40, 37, 48, 64, 58, 70, 57, 80],
-            borderColor: [
-              '#4d83ff'
-            ],
-            borderWidth: 2,
-            fill: false,
-            pointBackgroundColor: "#fff"
-          },
-          {
-            label: 'Loss',
-            data: [90, 62, 80, 63, 72, 62, 40, 50, 38],
-            borderColor: [
-              '#ffc100'
-            ],
-            borderWidth: 2,
-            fill: false,
-            pointBackgroundColor: "#fff"
-          }
-        ]
-      };
-      var options = {
-        scales: {
-          yAxes: [{
-            display: true,
-            gridLines: {
-              drawBorder: false,
-              lineWidth: 1,
-              color: "#e9e9e9",
+        var cashDepositsCanvas = $("#cash-deposits-chart").get(0).getContext("2d");
+        var myDate = new Date();
+        var today = myDate.getDay();
+
+        function getDay(today) {
+            var lables;
+            var lablesDay = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+            var num = today;
+            for (var i = 8; i < 9; i--) {
+                if (num < 0) {
+                    num = num + 7;
+                }
+                lables[i] = lablesDay[num];
+                num--;
+            }
+            return lables;
+        }
+
+        var data = {
+            labels: [today - 8 + 7 + 7, today - 7 + 7, today - 6 + 7, today - 5 + 7, today - 4 + 7, today - 3 + 7, today - 2 + 7, today - 1 + 7, today],
+            datasets: [
+                {
+                    label: 'PM2.5',
+                    data: [18, 20, 16, 15, 18, 17, 16, 20, 23],
+                    borderColor: [
+                        '#ff4747'
+                    ],
+                    borderWidth: 2,
+                    fill: false,
+                    pointBackgroundColor: "#fff"
+                },
+                {
+                    label: '温度',
+                    data: [29, 26, 25, 22, 21, 24, 30, 25, 32],
+                    borderColor: [
+                        '#4d83ff'
+                    ],
+                    borderWidth: 2,
+                    fill: false,
+                    pointBackgroundColor: "#fff"
+                },
+                {
+                    label: '湿度/%',
+                    data: [40, 38, 36, 42, 45, 40, 35, 36, 35],
+                    borderColor: [
+                        '#ffc100'
+                    ],
+                    borderWidth: 2,
+                    fill: false,
+                    pointBackgroundColor: "#fff"
+                }
+            ]
+        };
+        var options = {
+            scales: {
+                yAxes: [{
+                    display: true,
+                    gridLines: {
+                        drawBorder: false,
+                        lineWidth: 1,
+                        color: "#e9e9e9",
               zeroLineColor: "#e9e9e9",
             },
             ticks: {

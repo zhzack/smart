@@ -6,7 +6,7 @@
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row" th:fragment="navbar">
     <div class="navbar-brand-wrapper d-flex justify-content-center">
         <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-            <a class="navbar-brand brand-logo" href="../index.html"><img  alt="logo" th:src="@{/images/logo.svg}" /></a>
+            <a class="navbar-brand brand-logo" href="../index.html"><img alt="logo" th:src="@{/images/logo.svg}"/></a>
             <a class="navbar-brand brand-logo-mini" href="../index.html"><img th:src="@{/images/logo-mini.svg}"
                                                                               alt="logo"/></a>
             <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -127,14 +127,14 @@
             <li class="nav-item nav-profile dropdown">
                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
                     <img th:src="@{/images/faces/face5.jpg}" alt="profile"/>
-                    <span class="nav-profile-name">[[${session.loginUser}]]</span>
+                    <span class="nav-profile-name" th:text="${session.loginUser.user_name}"></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                     <a class="dropdown-item">
                         <i class="mdi mdi-settings text-primary"></i>
                         Settings
                     </a>
-                    <a class="dropdown-item">
+                    <a class="dropdown-item" th:href="@{/logout}">
                         <i class="mdi mdi-logout text-primary"></i>
                         Logout
                     </a>
@@ -153,46 +153,59 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar" th:fragment="siderbar">
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link" href="../index.html">
+            <a class="nav-link" href="/">
                 <i class="mdi mdi-home menu-icon"></i>
                 <span class="menu-title">Dashboard</span>
             </a>
         </li>
-        <li class="nav-item" >
 
-            <a class="nav-link" data-toggle="collapse" th:href="@{#device-online}" aria-expanded="false" aria-controls="ui-basic" >
+        <li class="nav-item">
+            <label class="badge badge-danger">在线数量:
+                <span id="onLine_sum">0</span></label>
+        </li>
+        <li class="nav-item">
+
+            <a class="nav-link" data-toggle="collapse" th:href="@{#device-online}" aria-expanded="false"
+               aria-controls="ui-basic">
                 <i class="mdi mdi-circle-outline menu-icon"></i>
-                <span class="menu-title"  >在线设备</span>
+                <span class="menu-title">在线设备</span>
                 <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="device-online">
-                <ul class="nav flex-column sub-menu" th:each="deviceOnline: ${deviceOnLines}">
-                    <li class="nav-item"> <a class="nav-link" th:text="${deviceOnline.getDevice_name()}">Buttons</a></li>
-                </ul>
+                <!--/*@thymesVar id="deviceOnLines" type="java.util.List<xyz.blue.pojo.Device>"*/-->
+                <!--/*@thymesVar id="deviceOnline" type="xyz.blue.pojo.Device"*/-->
+                <!--                <ul class="nav flex-column sub-menu" th:each="deviceOnline: ${deviceOnLines}">-->
+                <!--                    <li class="nav-item"> &lt;!&ndash;/*@thymesVar id="getDevice_name" type="xyz.blue.pojo.Device"*/&ndash;&gt;-->
+                <!--                        <a class="nav-link" th:href="@{'#'+${deviceOnline.getDevice_name()}}"-->
+                <!--                           th:alt="${deviceOnline.getDevice_name()}">Buttons</a></li>-->
+                <!--                </ul>-->
             </div>
         </li>
 
-        <li class="nav-item" >
+        <li class="nav-item">
 
-            <a class="nav-link" data-toggle="collapse" th:href="@{#device-all}" aria-expanded="false" aria-controls="ui-basic" >
+            <a class="nav-link" data-toggle="collapse" th:href="@{#device-all}" aria-expanded="false"
+               aria-controls="ui-basic">
                 <i class="mdi mdi-circle-outline menu-icon"></i>
-                <span class="menu-title"  >所有设备</span>
+                <span class="menu-title mdi-48px">所有设备</span>
                 <i class="menu-arrow"></i>
             </a>
 
             <div class="collapse" id="device-all">
-                <ul class="nav flex-column sub-menu" th:each="device: ${device}">
-                    <li class="nav-item"> <a class="nav-link" th:text="${device.getDevice_name()}">Buttons</a></li>
-                </ul>
+                <!--                <ul class="nav flex-column sub-menu" th:each="device: ${device}">-->
+                <!--                    <li class="nav-item"><a class="nav-link" th:text="${device.getDevice_name()}">Buttons</a>-->
+                <!--                    </li>-->
+                <!--                </ul>-->
+
             </div>
         </li>
 
-<!--        <li class="nav-item" th:each="device: ${device}">-->
-<!--            <a class="nav-link">-->
-<!--                <i class="mdi mdi-view-headline menu-icon"></i>-->
-<!--                <span class="menu-title" th:text="${device.getDevice_name()}">device_name</span>-->
-<!--            </a>-->
-<!--        </li>-->
+        <!--        <li class="nav-item" th:each="device: ${device}">-->
+        <!--            <a class="nav-link">-->
+        <!--                <i class="mdi mdi-view-headline menu-icon"></i>-->
+        <!--                <span class="menu-title" th:text="${device.getDevice_name()}">device_name</span>-->
+        <!--            </a>-->
+        <!--        </li>-->
     </ul>
 </nav>
 <!-- partial:../../partials/_footer.html -->

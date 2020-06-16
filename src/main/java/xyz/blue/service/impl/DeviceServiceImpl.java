@@ -52,7 +52,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<Device> queryDeviceList(){
+    public List<Device> queryDeviceList() {
 
         return deviceMapper.queryDeviceList();
     }
