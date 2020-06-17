@@ -94,10 +94,12 @@ public class SocketServer {
     public void onMessage(String message) {
         Client client = socketServers.stream().filter(cli -> cli.getSession() == session)
                 .collect(Collectors.toList()).get(0);
-        DeviceMsg deviceMsg = DeviceJsonToDeviceMsg.ToDeviceMsg(message);
 
+        DeviceMsg deviceMsg = DeviceJsonToDeviceMsg.ToDeviceMsg(message);
+        logger.info(message);
         if (deviceMsg != null) {
-            sendMessage(client.getClient_id() + "<--" + deviceMsg.getMsg(), deviceMsg.getTo_user_id());
+//            sendMessage(client.getClient_id() + "<--" + deviceMsg.getMsg(), deviceMsg.getTo_user_id());
+            sendMessage(message, deviceMsg.getTo_user_id());
 
             logger.info("客户端:【{}】向客户端【{}】发送信息:{}", client.getClient_id(), deviceMsg.getTo_user_id(), deviceMsg.getMsg());
         } else {

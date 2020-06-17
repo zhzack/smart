@@ -7,14 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Home</title>
     <!-- plugins:css -->
-    <link rel="stylesheet" th:href="@{/vendors/mdi/css/materialdesignicons.min.css}">
-    <link rel="stylesheet" th:href="@{/vendors/base/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{../vendors/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{../vendors/base/vendor.bundle.base.css}">
     <!-- endinject -->
     <!-- plugin css for this page -->
-    <link rel="stylesheet" th:href="@{/vendors/datatables.net-bs4/dataTables.bootstrap4.css}">
+    <link rel="stylesheet" th:href="@{../vendors/datatables.net-bs4/dataTables.bootstrap4.css}">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{../css/style.css}">
     <!-- endinject -->
     <link rel="shortcut icon" th:href="@{/images/favicon.png}"/>
     <link rel="stylesheet" th:href="@{../layui/css/layui.css}" media="all"/>
@@ -56,101 +56,29 @@
 
                             </div>
                         </div>
-                        <div class="col-2 float-right">
-                            <button type="button" class="btn btn-secondary btn-rounded btn-fw"
-                                    onclick="addDeviceBTN()">添加设备
-                            </button>
-                        </div>
+
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 grid-margin stretch-card" th:if="${deviceOnLines.size()}!=0">
-                        <div class="card-header">
-                            <div class="card-body dashboard-tabs p-0">
-                                <ul class="nav nav-tabs px-4" role="tablist">
-                                    <li class="nav-item" th:each="deviceOnLine: ${deviceOnLines}">
-                                        <button type="button" class="btn btn-inverse-danger btn-fw btn-rounded"
-                                                th:id="${deviceOnLine.getDevice_id()}+'-btn'"
-                                                th:text="${deviceOnLine.getDevice_name()}"
-                                                th:value="${deviceOnLine.getDevice_id()}"
-                                                onclick="deviceShow(value)"
-                                        >Device
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                <!--                <div class="row">-->
+                <!--                    <div class="col-md-12 grid-margin stretch-card" th:if="${deviceOnLines.size()}!=0">-->
+                <!--                        <div class="card-header">-->
+                <!--                            <div class="card-body dashboard-tabs p-0">-->
+                <!--                                <ul class="nav nav-tabs px-4" role="tablist">-->
+                <!--                                    <li class="nav-item" th:each="deviceOnLine: ${deviceOnLines}">-->
+                <!--                                        <button type="button" class="btn btn-inverse-danger btn-fw btn-rounded"-->
+                <!--                                                th:id="${deviceOnLine.getDevice_id()}+'-btn'"-->
+                <!--                                                th:text="${deviceOnLine.getDevice_name()}"-->
+                <!--                                                th:value="${deviceOnLine.getDevice_id()}"-->
+                <!--                                                onclick="deviceShow(value)"-->
+                <!--                                        >Device-->
+                <!--                                        </button>-->
+                <!--                                    </li>-->
+                <!--                                </ul>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
 
-                    </div>
-                    <div class="col-md-12 grid-margin stretch-card" id="deviceShow">
-                        <div class="col-md-6 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="chartjs-size-monitor"
-                                         style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
-                                        <div class="chartjs-size-monitor-expand"
-                                             style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
-                                        </div>
-                                        <div class="chartjs-size-monitor-shrink"
-                                             style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                            <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
-                                        </div>
-                                    </div>
-                                    <!--                                    <p class="card-title">Cash deposits</p>-->
-                                    <!--                                    <p class="mb-4">To start a blog, think of a topic about and first brainstorm party is ways to write-->
-                                    <!--                                        details</p>-->
-                                    <div id="cash-deposits-chart-legend" class="d-flex justify-content-center pt-3">
-                                        <ul class="dashboard-chart-legend">
-                                            <li><span style="background-color: #ff4747 "></span>Returns</li>
-                                            <li><span style="background-color: #4d83ff "></span>Sales</li>
-                                            <li><span style="background-color: #ffc100 "></span>Loss</li>
-                                        </ul>
-                                    </div>
-                                    <canvas id="cash-deposits-chart" width="475" height="237"
-                                            class="chartjs-render-monitor"
-                                            style="display: block; width: 475px; height: 237px;"></canvas>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="col-md-2 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="card-title" id="noParameter_device">
-                                        <div class="card-title grid-margin-xl-0">
-                                            <button type="button" class="btn btn-block btn-dark">开关控制</button>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body">
-
-                                    <div class="card-title">
-                                        <div class="card-title">
-                                            <button type="button" class="btn btn-block btn-dark">变量控制</button>
-                                        </div>
-
-                                        <div class="card-outline-primary" id="parameter_device">
-
-                                        </div>
-
-
-                                    </div>
-                                    <div class="card-title">
-                                        <div class="card-body" id="parameter_msg">
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!--                    </div>-->
+                <!--                </div>-->
                 <div class="row">
                     <div class="card-header">
                         在线设备
@@ -191,27 +119,27 @@
 <!-- container-scroller -->
 
 <!-- plugins:js -->
-<script th:src="@{vendors/base/vendor.bundle.base.js}"></script>
+<script th:src="@{../vendors/base/vendor.bundle.base.js}"></script>
 <!-- endinject -->
 <!-- Plugin js for this page-->
-<script th:src="@{vendors/chart.js/Chart.min.js}"></script>
-<script th:src="@{vendors/datatables.net/jquery.dataTables.js}"></script>
-<script th:src="@{vendors/datatables.net-bs4/dataTables.bootstrap4.js}"></script>
+<script th:src="@{../vendors/chart.js/Chart.min.js}"></script>
+<script th:src="@{../vendors/datatables.net/jquery.dataTables.js}"></script>
+<script th:src="@{../vendors/datatables.net-bs4/dataTables.bootstrap4.js}"></script>
 <!-- End plugin js for this page-->
 <!-- inject:js -->
-<script th:src="@{js/off-canvas.js}"></script>
-<script th:src="@{js/hoverable-collapse.js}"></script>
-<script th:src="@{js/template.js}"></script>
+<script th:src="@{../js/off-canvas.js}"></script>
+<script th:src="@{../js/hoverable-collapse.js}"></script>
+<script th:src="@{../js/template.js}"></script>
 <!-- endinject -->
 <!-- Custom js for this page-->
-<script th:src="@{js/dashboard.js}"></script>
-<script th:src="@{js/data-table.js}"></script>
-<script th:src="@{js/jquery.dataTables.js}"></script>
-<script th:src="@{js/dataTables.bootstrap4.js}"></script>
+<script th:src="@{../js/dashboard.js}"></script>
+<script th:src="@{../js/data-table.js}"></script>
+<script th:src="@{../js/jquery.dataTables.js}"></script>
+<script th:src="@{../js/dataTables.bootstrap4.js}"></script>
 <!--<script th:src="@{../static/js/ws.js}"></script>-->
 <!-- End custom js for this page-->
 <script type="text/javascript">
-    parameter_device()
+    // parameter_device()
     devices()
     connect()
 
@@ -255,7 +183,7 @@
                             "msg": child_device_name
                         },
                         success: function (data) {
-
+                            ws.send(data)
                             console.log(data);
                         }
                     })
@@ -357,6 +285,7 @@
 
     function deviceShow(deviceId) {
         let deviceShow = document.getElementById("deviceShow");
+        alert(deviceId);
         deviceShow.innerHTML = "<h1>123456</h1>";
     }
 
@@ -397,9 +326,34 @@
                         "                                <div class=\"col-md-12 grid-margin stretch-card\">\n" +
                         "                                    <div class=\"col-md-5  stretch-card\">\n" +
                         "                                        <div class=\"card\">\n" +
-                        "                                            <div class=\"card-header\">接收收据</div>\n" +
+                        "                                            <div class=\"card-header\">数据接收</div>\n" +
                         "                                            <div class=\"card-body\" " +
-                        "id='OnLineDevicesDataShow_" + item.device_id + "'></div>\n" +
+                        "id='OnLineDevicesDataShow_" + item.device_id + "'>" +
+                        "<div class='row'> " +
+                        "<button class='btn btn-danger btn-sm'>温度</button> " +
+                        "<button class='btn btn-light btn-sm' id='temperature_" + item.device_id + "'>25</button> " +
+                        "<button class='btn btn-light btn-sm'>摄氏度</button> " +
+                        "</div>" +
+                        "<br>" +
+                        "<div class='row'> " +
+                        "<button class='btn btn-primary btn-sm'>湿度</button> " +
+                        "<button class='btn btn-light btn-sm' id='humidity" + item.device_id + "'>70</button> " +
+                        "<button class='btn btn-light btn-sm'>相对湿度</button> " +
+                        "</div>" +
+                        "<br>" +
+                        "<div class='row'> " +
+                        "<button class='btn btn-secondary btn-sm'>PM2.5/1h</button> " +
+                        "<button class='btn btn-light btn-sm' id='PM25" + item.device_id + "'>23</button> " +
+                        "<button class='btn btn-light btn-sm'>μg/m3(CO为mg/m3)</button> " +
+                        "</div>" +
+                        "<br>" +
+                        "" +
+                        "" +
+                        "" +
+                        "" +
+                        "" +
+                        "" +
+                        "</div>\n" +
                         "                                            <div class=\"card-footer\"></div>\n" +
                         "                                        </div>\n" +
                         "                                    </div>\n" +
@@ -433,7 +387,7 @@
                 )
                 onLine_sum.innerHTML = data.devicesOnLine.length;
                 //let deviceData=JSON.parse(data);
-                // setTimeout(devices, 3000);
+                //setTimeout(devices, 3000);
                 // console.log(data.devices[0]);
                 // console.log(data.devicesOnLine);
                 // console.log(data);
@@ -559,15 +513,17 @@
 
     function connect() {
         const user_name = [[${session.loginUser.user_id}]];
+
         const Socket = "MozWebSocket" in window ? MozWebSocket : WebSocket;
         let ws = new Socket("ws://127.0.0.1/ws/" + user_name);
 
         ws.onmessage = function (evt) {
-            var content = $("#content").html();
-            $("#content").html(content + '<div style="text-align: right;margin-bottom: 8px">\n' +
-                '                        <p><q style="color: mediumorchid;text-align: right">' + evt.data + '</span></p>\n' +
-                '                    </div>\n' +
-                '                    <br/>');
+            // alert(evt.data);
+            let obj = eval("(" + evt.data + ")");
+            alert(obj.msg[0]);
+            let OnLineDevicesDataShow_ = document.getElementById("OnLineDevicesDataShow_" + obj.device_id);
+            OnLineDevicesDataShow_.innerHTML = obj.msg;
+
         };
 
         ws.onclose = function (evt) {

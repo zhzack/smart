@@ -1,0 +1,23 @@
+<div class="card-body">
+    <div class="chartjs-size-monitor"
+         style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+        <div class="chartjs-size-monitor-expand"
+             style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+        </div>
+        <div class="chartjs-size-monitor-shrink"
+             style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+            <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+        </div>
+    </div>
+    <div id="cash-deposits-chart-legend" class="d-flex justify-content-center pt-3">
+        <ul class="dashboard-chart-legend">
+            <li><span style="background-color: #ff4747 "></span>Returns</li>
+            <li><span style="background-color: #4d83ff "></span>Sales</li>
+            <li><span style="background-color: #ffc100 "></span>Loss</li>
+        </ul>
+    </div>
+    <canvas id="cash-deposits-chart" width="475" height="237"
+            class="chartjs-render-monitor"
+            style="display: block; width: 475px; height: 237px;"></canvas>
+</div>

@@ -103,10 +103,9 @@
                             </div>
                         </div>
                         <div class="item-content">
-                            <h6 class="font-weight-normal">Settings</h6>
-                            <p class="font-weight-light small-text mb-0 text-muted">
-                                Private message
-                            </p>
+                            <button type="button" class="btn btn-secondary btn-rounded btn-fw"
+                                    onclick="addDeviceBTN()">添加设备
+                            </button>
                         </div>
                     </a>
                     <a class="dropdown-item">
@@ -119,6 +118,29 @@
                             <h6 class="font-weight-normal">New user registration</h6>
                             <p class="font-weight-light small-text mb-0 text-muted">
                                 2 days ago
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </li>
+            <li class="nav-item dropdown mr-1">
+                <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center notification-dropdown"
+                   id="" href="#" data-toggle="dropdown">
+                    <i class="mdi mdi-bell mx-0"></i>
+                    <span class="count"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="notificationDropdown">
+                    <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+                    <a class="dropdown-item">
+                        <div class="item-thumbnail">
+                            <div class="item-icon bg-success">
+                                <i class="mdi mdi-information mx-0"></i>
+                            </div>
+                        </div>
+                        <div class="item-content">
+                            <h6 class="font-weight-normal">Application Error</h6>
+                            <p class="font-weight-light small-text mb-0 text-muted">
+                                Just now
                             </p>
                         </div>
                     </a>
@@ -206,7 +228,25 @@
         <!--                <span class="menu-title" th:text="${device.getDevice_name()}">device_name</span>-->
         <!--            </a>-->
         <!--        </li>-->
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" th:href="@{#msg_history}" aria-expanded="false"
+               aria-controls="ui-basic">
+                <i class="mdi mdi-circle-outline menu-icon"></i>
+                <span class="menu-title mdi-48px">消息记录</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="card col" id="msg_history">
+                <div class="card-header">
+                    1565313
+                </div>
+                <div class="card-body">
+                    asdasfa
+                </div>
+            </div>
+
+        </li>
     </ul>
+
 </nav>
 <!-- partial:../../partials/_footer.html -->
 

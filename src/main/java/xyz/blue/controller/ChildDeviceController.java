@@ -38,7 +38,7 @@ public class ChildDeviceController {
     @ResponseBody
     public List<ChildDevice> q_cd_byId(@RequestParam(value = "device_id") int device_id) {
         //JSONObject
-        System.out.println(device_id);
+//        System.out.println(device_id);
         if (device_id != 0) {
             try {
                 return childDeviceService.query_cdBydId(device_id);
