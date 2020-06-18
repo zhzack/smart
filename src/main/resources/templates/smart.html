@@ -17,20 +17,25 @@
     <link rel="stylesheet" th:href="@{../css/style.css}">
     <!-- endinject -->
     <link rel="shortcut icon" th:href="@{/images/favicon.png}"/>
-    <link rel="stylesheet" th:href="@{../layui/css/layui.css}" media="all"/>
-    <link rel="stylesheet" th:href="@{../layui/css/layui.mobile.css}" media="all"/>
+
     <script th:src="@{../jquery.min.js}"></script>
-    <script th:src="@{../layui/layui.all.js}"></script>
-    <script th:src="@{../layui/layui.js}"></script>
-    <style>
-        .threed {
-            text-align: center;
-            color: #eb7350;
-            -webkit-text-stroke: 1px black;
-            letter-spacing: 0.04em;
-            background-color: white;
-        }
-    </style>
+    <!-- plugins:js -->
+    <script th:src="@{../vendors/base/vendor.bundle.base.js}"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page-->
+    <script th:src="@{../vendors/chart.js/Chart.min.js}"></script>
+    <script th:src="@{../vendors/datatables.net/jquery.dataTables.js}"></script>
+    <script th:src="@{../vendors/datatables.net-bs4/dataTables.bootstrap4.js}"></script>
+
+    <script th:src="@{../js/off-canvas.js}"></script>
+    <script th:src="@{../js/hoverable-collapse.js}"></script>
+    <script th:src="@{../js/template.js}"></script>
+
+    <script th:src="@{../js/dashboard.js}"></script>
+    <script th:src="@{../js/data-table.js}"></script>
+    <script th:src="@{../js/jquery.dataTables.js}"></script>
+    <script th:src="@{../js/dataTables.bootstrap4.js}"></script>
+
 </head>
 
 <body>
@@ -41,7 +46,6 @@
     <div class="container-fluid page-body-wrapper">
         <!-- partial:partials/_sidebar.html -->
         <div th:insert="~{/pages/commons/commons.html::siderbar}"></div>
-
         <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper" id="DevicesShow">
@@ -59,26 +63,6 @@
 
                     </div>
                 </div>
-                <!--                <div class="row">-->
-                <!--                    <div class="col-md-12 grid-margin stretch-card" th:if="${deviceOnLines.size()}!=0">-->
-                <!--                        <div class="card-header">-->
-                <!--                            <div class="card-body dashboard-tabs p-0">-->
-                <!--                                <ul class="nav nav-tabs px-4" role="tablist">-->
-                <!--                                    <li class="nav-item" th:each="deviceOnLine: ${deviceOnLines}">-->
-                <!--                                        <button type="button" class="btn btn-inverse-danger btn-fw btn-rounded"-->
-                <!--                                                th:id="${deviceOnLine.getDevice_id()}+'-btn'"-->
-                <!--                                                th:text="${deviceOnLine.getDevice_name()}"-->
-                <!--                                                th:value="${deviceOnLine.getDevice_id()}"-->
-                <!--                                                onclick="deviceShow(value)"-->
-                <!--                                        >Device-->
-                <!--                                        </button>-->
-                <!--                                    </li>-->
-                <!--                                </ul>-->
-                <!--                            </div>-->
-                <!--                        </div>-->
-
-                <!--                    </div>-->
-                <!--                </div>-->
                 <div class="row">
                     <div class="card-header">
                         在线设备
@@ -88,8 +72,6 @@
 
                     </div>
                 </div>
-
-
                 <div class="row">
                     <div class="card-header">
                         全部设备
@@ -98,46 +80,12 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
-        <div class="card-body">
-        </div>
+        <div class="card-body"></div>
     </div>
 
 </div>
 
-
-<!-- content-wrapper ends -->
-
-<!-- partial -->
-</div>
-<!-- main-panel ends -->
-</div>
-<!-- page-body-wrapper ends -->
-</div>
-<!-- container-scroller -->
-
-<!-- plugins:js -->
-<script th:src="@{../vendors/base/vendor.bundle.base.js}"></script>
-<!-- endinject -->
-<!-- Plugin js for this page-->
-<script th:src="@{../vendors/chart.js/Chart.min.js}"></script>
-<script th:src="@{../vendors/datatables.net/jquery.dataTables.js}"></script>
-<script th:src="@{../vendors/datatables.net-bs4/dataTables.bootstrap4.js}"></script>
-<!-- End plugin js for this page-->
-<!-- inject:js -->
-<script th:src="@{../js/off-canvas.js}"></script>
-<script th:src="@{../js/hoverable-collapse.js}"></script>
-<script th:src="@{../js/template.js}"></script>
-<!-- endinject -->
-<!-- Custom js for this page-->
-<script th:src="@{../js/dashboard.js}"></script>
-<script th:src="@{../js/data-table.js}"></script>
-<script th:src="@{../js/jquery.dataTables.js}"></script>
-<script th:src="@{../js/dataTables.bootstrap4.js}"></script>
-<!--<script th:src="@{../static/js/ws.js}"></script>-->
-<!-- End custom js for this page-->
 <script type="text/javascript">
     // parameter_device()
     var ws = null;
@@ -145,8 +93,7 @@
     connect()
 
     function sand_parameter_msg(device_id) {
-        let customizeMsg_ = document.getElementById("customizeMsg_" + device_id);
-
+        let customizeMsg_ = document.getElementById("customizeMsg_" + device_id).value;
         $.ajax({
             method: 'get',
             url: '/UserSandMsg',
@@ -161,6 +108,7 @@
                     "to_user_id": device_id
                 });
                 // ws.send(jsonMsg);
+
                 $.ajax({
                     method: 'get',
                     url: '/sendmsg',
@@ -171,6 +119,7 @@
                     success: function (data) {
                         // ws.send(jsonMsg)
                         //使用接口向后台发消息，后台服务在进行转发
+                        alert("发送成功")
                         console.log(data);
                     }
                 })
@@ -180,7 +129,6 @@
                 alert("未绑定账户，请进入管理员页面添加");
             }
         })
-
     }
 
     //发送消息，发送要控制的设备名
@@ -216,6 +164,7 @@
                     success: function (data) {
                         // ws.send(jsonMsg)
                         //使用接口向后台发消息，后台服务在进行转发
+                        alert("发送成功")
                         console.log(data);
                     }
                 })

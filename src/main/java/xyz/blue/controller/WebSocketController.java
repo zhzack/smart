@@ -198,12 +198,7 @@ public class WebSocketController {
     @RequestMapping("UserSandMsg")
     @ResponseBody
     public int UserSandMsg(int deviceId, String msg) {
-        int userId = getUser().getUser_id();
-        if (userId != 0) {
-            DeviceMsg deviceMsg = new DeviceMsg(userId, deviceId, msg);
-            System.out.println(deviceMsg);
-        }
-        return userId;
+        return getUser().getUser_id();
     }
 
     @RequestMapping("devicesandmsg")

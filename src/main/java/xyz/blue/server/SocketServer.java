@@ -153,7 +153,7 @@ public class SocketServer {
         socketServers.forEach(client -> {
             if ((client.getClient_id()) == client_id) {
                 try {
-                    client.getSession().getBasicRemote().sendText(message);
+                    client.getSession().getBasicRemote().sendText(message + "");
 
                 } catch (IOException e) {
                     e.printStackTrace();
