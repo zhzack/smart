@@ -163,6 +163,38 @@ public class WebSocketController {
 
     }
 
+    /*
+     * 这里的删除设备，并没有真正的把设备从表内删除，
+     * 而是更改设备所属人。让当前登录账户不再拥有此设备
+     * */
+    @RequestMapping("del_device")
+    @ResponseBody
+    public String del_device(int deviceId) {
+        int userId = getUser().getUser_id();
+        String s = "失败";
+        if (userId != 0) {
+            Device device = deviceService.query_deviceById(deviceId);
+            if (userId == device.getUser_id()) {
+
+                try {
+                    deviceService.update_deviceById(new Device(deviceId, 101101));
+                    s = "删除设备:" + deviceId + "成功";
+                    System.out.println(s);
+
+                } catch (Exception e) {
+                    s = "删除设备:" + deviceId + "失败";
+                    System.out.println(s);
+
+                }
+            } else {
+                s = "删除设备:" + deviceId + "失败，" + "当前用户没有此设备";
+                System.out.println(s);
+
+            }
+        }
+        return s;
+    }
+
     @RequestMapping("UserSandMsg")
     @ResponseBody
     public int UserSandMsg(int deviceId, String msg) {

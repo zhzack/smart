@@ -31,4 +31,6 @@ public interface DeviceMapper {
 
     //    更新设备信息
     void update_deviceById(Device device);
+
+
 }

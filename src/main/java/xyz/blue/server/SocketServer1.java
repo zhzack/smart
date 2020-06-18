@@ -7,7 +7,7 @@
 //import org.slf4j.LoggerFactory;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Component;
-//import xyz.blue.entity.Client;
+//import xyz.blue.pojo.Client;
 //import xyz.blue.pojo.User;
 //import xyz.blue.service.impl.DeviceServiceImpl;
 //import xyz.blue.service.impl.UserServiceImpl;

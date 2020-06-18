@@ -16,8 +16,8 @@
 
     <update id="update_deviceById">
         update device
-        set device_name=#{device_name}
-        where device_id = #{device_name}
+        set user_id=#{user_id}
+        where device_id = #{device_id}
     </update>
 
 

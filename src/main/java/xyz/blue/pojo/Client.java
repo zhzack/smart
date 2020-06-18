@@ -1,4 +1,4 @@
-package xyz.blue.entity;
+package xyz.blue.pojo;
 
 import javax.websocket.Session;
 import java.io.Serializable;

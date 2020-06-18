@@ -107,7 +107,7 @@
 
 </div>
 
-</div>
+
 <!-- content-wrapper ends -->
 
 <!-- partial -->
@@ -140,63 +140,91 @@
 <!-- End custom js for this page-->
 <script type="text/javascript">
     // parameter_device()
+    var ws = null;
     devices()
     connect()
 
-    function sand_parameter_msg() {
+    function sand_parameter_msg(device_id) {
+        let customizeMsg_ = document.getElementById("customizeMsg_" + device_id);
+
+        $.ajax({
+            method: 'get',
+            url: '/UserSandMsg',
+            data: {
+                deviceId: device_id,
+                msg: customizeMsg_
+            },
+            success: function (to_user_id) {
+                let jsonMsg = JSON.stringify({
+                    "msg": customizeMsg_,
+                    "device_id": to_user_id,
+                    "to_user_id": device_id
+                });
+                // ws.send(jsonMsg);
+                $.ajax({
+                    method: 'get',
+                    url: '/sendmsg',
+                    data: {
+                        "client_id": device_id,
+                        "msg": customizeMsg_
+                    },
+                    success: function (data) {
+                        // ws.send(jsonMsg)
+                        //使用接口向后台发消息，后台服务在进行转发
+                        console.log(data);
+                    }
+                })
+
+            }
+            , error: function () {
+                alert("未绑定账户，请进入管理员页面添加");
+            }
+        })
 
     }
 
+    //发送消息，发送要控制的设备名
     function sand_no_parameter_msg(ss, dd) {
 
-        asd = document.getElementById(ss + "_" + dd);
+        let asd = document.getElementById(ss + "_" + dd);
         // alert(ss+""+dd+"asd"+document.getElementById(ss+"_"+dd).getAttribute("child_device_name"));
-
-
         let device_id = asd.getAttribute("device_id");
-
         let child_device_id = asd.getAttribute("child_device_id");
-
         let child_device_name = asd.getAttribute("child_device_name");
-
         $.ajax({
-                method: 'get',
-                url: '/UserSandMsg',
-                data: {
-                    deviceId: device_id,
-                    msg: child_device_name
-                },
-                success: function (to_user_id) {
-                    let jsonMsg = JSON.stringify({
-                        "msg": child_device_name,
-                        "device_id": to_user_id,
-                        "to_user_id": device_id
-                    });
+            method: 'get',
+            url: '/UserSandMsg',
+            data: {
+                deviceId: device_id,
+                msg: child_device_name
+            },
+            success: function (to_user_id) {
+                let jsonMsg = JSON.stringify({
+                    "msg": child_device_name,
+                    "device_id": to_user_id,
+                    "to_user_id": device_id
+                });
+                // ws.send(jsonMsg);
 
-                    // ws.send(jsonMsg);
+                $.ajax({
+                    method: 'get',
+                    url: '/sendmsg',
+                    data: {
+                        "client_id": device_id,
+                        "msg": child_device_name
+                    },
+                    success: function (data) {
+                        // ws.send(jsonMsg)
+                        //使用接口向后台发消息，后台服务在进行转发
+                        console.log(data);
+                    }
+                })
 
-                    $.ajax({
-                        method: 'get',
-                        url: '/sendmsg',
-                        data: {
-                            "client_id": device_id,
-                            "msg": child_device_name
-                        },
-                        success: function (data) {
-                            ws.send(data)
-                            console.log(data);
-                        }
-                    })
-                    $("#content").html(content + '<div>\n' +
-                        '                        <p><q style="color: coral">客户端:</q><span>' + writeMsg + '</span></p>\n' +
-                        '                    </div>\n' +
-                        '                    <br/>');
-                }
-                , error: function () {
-                    alert("未绑定账户，请进入管理员页面添加");
-                }
             }
-        )
+            , error: function () {
+                alert("未绑定账户，请进入管理员页面添加");
+            }
+        })
 
 
         // alert(child_device_name + "asd");
@@ -241,53 +269,6 @@
         //     "                                        </div>";
     }
 
-    function parameter_device() {
-        let parameter_device = document.getElementById("parameter_device");
-        parameter_device.innerHTML = "<button type=\"button\" class=\"btn btn-inverse-warning btn-block btn-fw\"\n" +
-            "                                            onclick=\"parameter_msg()\">\n" +
-            "                                                客厅空调\n" +
-            "                                            </button>";
-
-    }
-
-    function parameter_msg() {
-        let parameter_msg = document.getElementById("parameter_msg");
-        parameter_msg.innerHTML = "<form class=\"forms-sample\">\n" +
-            "                                                <div class=\"card-title\">\n" +
-            "                                                <button type=\"button\" class=\"btn btn-block btn-light btn-large\">空调设置</button>\n" +
-            "                                                </div>\n" +
-            "                                                <div class=\"form-group row\">\n" +
-            "                                                    <label for=\"exampleInputUsername2\"\n" +
-            "                                                           class=\"col-sm-3 col-form-label\">温度</label>\n" +
-            "                                                    <div class=\"col-sm-9\">\n" +
-            "                                                        <input type=\"text\" class=\"form-control\"\n" +
-            "                                                               id=\"exampleInputUsername2\" placeholder=\"温度（16-30）\">\n" +
-            "                                                    </div>\n" +
-            "                                                </div>\n" +
-            "\n" +
-            "                                                <div class=\"form-group row\" id=\"input_data\">\n" +
-            "                                                    <label for=\"exampleFormControlSelect2\"\n" +
-            "                                                           class=\"col-sm-3 col-form-label\">模式</label>\n" +
-            "                                                    <div class=\"col-sm-9\">\n" +
-            "                                                        <select class=\" form-control\"\n" +
-            "                                                                id=\"exampleFormControlSelect2\">\n" +
-            "                                                            <option>制冷</option>\n" +
-            "                                                            <option>制暖</option>\n" +
-            "                                                            <option>换气</option>\n" +
-            "                                                        </select>\n" +
-            "                                                    </div>\n" +
-            "                                                </div>\n" +
-            "                                                <button type=\"button\" class=\"btn btn-block btn-dark\">完成设置</button>\n" +
-            "\n" +
-            "                                            </form>"
-
-    }
-
-    function deviceShow(deviceId) {
-        let deviceShow = document.getElementById("deviceShow");
-        alert(deviceId);
-        deviceShow.innerHTML = "<h1>123456</h1>";
-    }
 
     function devices() {
         let onLineDevices = document.getElementById("device-online");
@@ -305,15 +286,66 @@
                 AllDevices.innerHTML = "";
                 OnLineDevices.innerHTML = "";
                 data.devices.forEach(function (item) {
+
                         Devices.innerHTML = Devices.innerHTML + "<ul class=\"nav flex-column sub-menu\" >\n" +
                             "                    <li class=\"nav-item\"><a class=\"nav-link\" href=\"#" + item.device_id + " \">" + item.device_name + "</a>\n" +
                             "                    </li>\n" +
                             "                </ul>";
-                        AllDevices.innerHTML = AllDevices.innerHTML + "<div class=\"card-title\" id=\"AllDevicesShow_" + item.device_id + "\">" +
-                            "<div class='card-header'>" + item.device_name + "</div></div>";
+                        AllDevices.innerHTML = AllDevices.innerHTML + "<div class=\"card \">\n" +
+                            "                            <div class=\"card-header \">\n" +
+                            "                                " + item.device_name + "\n" +
+                            "                            </div>\n" +
+                            "                            <div class=\"card-body\">\n" +
+                            "                                <div class=\"col-md-12 grid-margin stretch-card\">\n" +
+                            "                                    <div class=\"col-md-5  stretch-card\">\n" +
+                            "                                        <div class=\"card\">\n" +
+                            "                                            <div class=\"card-header\">数据接收</div>\n" +
+                            "                                            <div class=\"card-body\" " +
+                            "id='OnLineDevicesDataShow_" + item.device_id + "'>" +
+                            "<div class='row'> " +
+                            "<button class='btn btn-danger btn-sm'>温度</button> " +
+                            "<button class='btn btn-light btn-sm' id='dtemperature_" + item.device_id + "'>25</button> " +
+                            "<button class='btn btn-light btn-sm'>摄氏度</button> " +
+                            "</div>" +
+                            "<br>" +
+                            "<div class='row'> " +
+                            "<button class='btn btn-primary btn-sm'>湿度</button> " +
+                            "<button class='btn btn-light btn-sm' id='dhumidity" + item.device_id + "'>70</button> " +
+                            "<button class='btn btn-light btn-sm'>相对湿度</button> " +
+                            "</div>" +
+                            "<br>" +
+                            "<div class='row'> " +
+                            "<button class='btn btn-secondary btn-sm'>PM2.5/1h</button> " +
+                            "<button class='btn btn-light btn-sm' id='dPM25" + item.device_id + "'>23</button> " +
+                            "<button class='btn btn-light btn-sm'>μg/m3(CO为mg/m3)</button> " +
+                            "</div>" +
+                            "<br>" +
+                            "</div>\n" +
+                            "                                            <div class=\"card-footer\"></div>\n" +
+                            "                                        </div>\n" +
+                            "                                    </div>\n" +
+                            "                                    <div class=\"col-md-3  stretch-card\">\n" +
+                            "                                        <div class=\"card\">\n" +
+                            "                                            <div class=\"card-header\">按键控制</div>\n" +
+                            "                                            <div class=\"card-body\" " +
+                            "id='DevicesKeyShow_" + item.device_id + "'></div>\n" +
+                            "                                            <div class=\"card-footer\"></div>\n" +
+                            "                                        </div>\n" +
+                            "                                    </div>\n" +
+                            "                                    <div class=\"col-md-4  stretch-card\">\n" +
+                            "                                        <div class=\"card\">\n" +
+                            "                                            <div class=\"card-header\">控制</div>\n" +
+                            "                                            <div class=\"card-body\"></div>\n" +
+                            "                                            <div class=\"card-footer\"></div>\n" +
+                            "                                        </div>\n" +
+                            "                                    </div>\n" +
+
+                            "                            </div>\n" +
+                            "                        </div>";
                     }
                 )
                 data.devicesOnLine.forEach(function (item) {
+                    let deviceId = item.device_id;
                     onLineDevices.innerHTML = onLineDevices.innerHTML + "<ul class=\"nav flex-column sub-menu\" >\n" +
                         "                    <li class=\"nav-item\"><a class=\"nav-link\" href=\"#" + item.device_id + " \">" + "<spam class=\"menu-title\">" + item.device_name + "</spam></a>\n" +
                         "                    </li>\n" +
@@ -337,22 +369,17 @@
                         "<br>" +
                         "<div class='row'> " +
                         "<button class='btn btn-primary btn-sm'>湿度</button> " +
-                        "<button class='btn btn-light btn-sm' id='humidity" + item.device_id + "'>70</button> " +
+                        "<button class='btn btn-light btn-sm' id='humidity_" + item.device_id + "'>70</button> " +
                         "<button class='btn btn-light btn-sm'>相对湿度</button> " +
                         "</div>" +
                         "<br>" +
                         "<div class='row'> " +
                         "<button class='btn btn-secondary btn-sm'>PM2.5/1h</button> " +
-                        "<button class='btn btn-light btn-sm' id='PM25" + item.device_id + "'>23</button> " +
+                        "<button class='btn btn-light btn-sm' id='PM25_" + item.device_id + "'>23</button> " +
                         "<button class='btn btn-light btn-sm'>μg/m3(CO为mg/m3)</button> " +
                         "</div>" +
                         "<br>" +
-                        "" +
-                        "" +
-                        "" +
-                        "" +
-                        "" +
-                        "" +
+
                         "</div>\n" +
                         "                                            <div class=\"card-footer\"></div>\n" +
                         "                                        </div>\n" +
@@ -367,8 +394,14 @@
                         "                                    </div>\n" +
                         "                                    <div class=\"col-md-4  stretch-card\">\n" +
                         "                                        <div class=\"card\">\n" +
-                        "                                            <div class=\"card-header\">多参数控制</div>\n" +
-                        "                                            <div class=\"card-body\"></div>\n" +
+                        "                                            <div class=\"card-header\">控制</div>\n" +
+                        "                                            <div class=\"card-body\">" +
+                        "<button class='btn-danger btn-block' id='del_device_" +
+                        "" + item.device_id + "' onclick='del_device(" + deviceId + ")'>删除设备</button>" +
+                        "<br>" +
+                        "<input type='text' class='form-control'\n" +
+                        " id='customizeMsg_" + item.device_id + "' placeholder='消息内容'>" +
+                        "<button class='btn-block btn btn-secondary' onclick='sand_parameter_msg(" + item.device_id + ")'>发送消息</button>" +
                         "                                            <div class=\"card-footer\"></div>\n" +
                         "                                        </div>\n" +
                         "                                    </div>\n" +
@@ -387,7 +420,7 @@
                 )
                 onLine_sum.innerHTML = data.devicesOnLine.length;
                 //let deviceData=JSON.parse(data);
-                //setTimeout(devices, 3000);
+                // setTimeout(devices, 3000);
                 // console.log(data.devices[0]);
                 // console.log(data.devicesOnLine);
                 // console.log(data);
@@ -396,60 +429,40 @@
 
     }
 
-    function sendMsg() {
-        let user = [];
-        $("input[name='check']:checked").each(function (i) {//把所有被选中的复选框的值存入数组
-            user = user + $(this).attr("title") + ","
-        });
-        console.log(user)
-
-        if (user.length > 0) {
-            user = user.substr(0, user.length - 1);
-        } else {
-            console.log("未选中发送人")
-            var content = $("#content").html();
-            $("#content").html(content + '<div style="margin-bottom: 8px">\n' +
-                '                        <p><q style="color: red">' + '系统提示:请在多选框中选择要发送的用户' + '</span></p>\n' +
-                '                    </div>\n' +
-                '                    <br/>');
-            return
-        }
-
-        var msg = $("#msg").val();
-        if (msg != null) {
-            $.ajax({
-                method: 'get',
-                url: '/sendmsg',
-                data: {
-                    "client_id": user,
-                    "msg": msg
-                },
-                success: function (data) {
-                    var content = $("#content").html();
-                    $("#content").html(content + '<div style="margin-bottom: 8px">\n' +
-                        '                        <p><q style="color: #eb7350">' + '服务器推送  ' + msg + ' -->' + user + '</span></p>\n' +
-                        '                    </div>\n' +
-                        '                    <br/>');
-                    console.log(data);
-                }
-            })
-        } else {
-            alert("请填写要发送的用户昵称或者发送内容");
-        }
+    function del_device(deviceId) {
+        $.ajax({
+            method: 'get',
+            url: '/del_device',
+            data: {
+                "deviceId": deviceId,
+            },
+            success: function (data) {
+                alert(data)
+                location.reload();
+                console.log(data);
+            }
+        })
     }
 
+
     function addDeviceBTN() {
-        const divA = document.getElementById("page");
-        divA.innerHTML = divA.innerHTML + '<div class="layui-form-item" id="addDevice">\n' +
-            '                    <div class="layui-input-inline" style="width: 350px">\n' +
-            '                        <input id="DeviceName" type="text" name="device" required lay-verify="required" placeholder="设备名称"\n' +
-            '                               autocomplete="off" class="layui-input">\n' +
-            '\n' +
-            '                        <input id="DeviceId" type="text" name="device" required lay-verify="required" placeholder="设备id"\n' +
-            '                               autocomplete="off" class="layui-input">' +
-            '<button class="layui-btn" onclick="addDevice()">添加设备</button>\n' +
+        const divA = document.getElementById("addDevice");
+
+        divA.innerHTML = divA.innerHTML + '<form class="forms-sample">\n' +
+            '                    <div class="form-group row">\n' +
+            '                      <div class="col-sm-9">\n' +
+            '                        <input type="text" class="form-control" id="device_name" placeholder="设备名称">\n' +
+            '                      </div>\n' +
             '                    </div>\n' +
-            '                </div>';
+            '                    <div class="form-group row">\n' +
+            '                      <div class="col-sm-9">\n' +
+            '                        <input type="text" class="form-control"  id="device_mac" placeholder="设备MAC">\n' +
+            '                      </div>\n' +
+            '                    </div>\n' +
+
+            '                    <button type="button" onclick="addDevice()" class="btn btn-primary btn-block ">添加</button>\n' +
+
+            '                  </form>';
 
     }
 
@@ -485,7 +498,6 @@
             )
         }
 
-
     }
 
     function sendAll() {
@@ -498,11 +510,6 @@
                     msg: msg
                 },
                 success: function (data) {
-                    var content = $("#content").html();
-                    $("#content").html(content + '<div style="margin-bottom: 8px">\n' +
-                        '                        <p><q style="color: #eb7350">' + '服务器推送  ' + msg + ' --> 所有用户' + '</span></p>\n' +
-                        '                    </div>\n' +
-                        '                    <br/>');
                     console.log(data);
                 }
             })
@@ -515,14 +522,20 @@
         const user_name = [[${session.loginUser.user_id}]];
 
         const Socket = "MozWebSocket" in window ? MozWebSocket : WebSocket;
-        let ws = new Socket("ws://127.0.0.1/ws/" + user_name);
+        ws = new Socket("ws://127.0.0.1/ws/" + user_name);
 
         ws.onmessage = function (evt) {
-            // alert(evt.data);
-            let obj = eval("(" + evt.data + ")");
-            alert(obj.msg[0]);
-            let OnLineDevicesDataShow_ = document.getElementById("OnLineDevicesDataShow_" + obj.device_id);
-            OnLineDevicesDataShow_.innerHTML = obj.msg;
+            alert(evt.data);
+
+            let ob = JSON.parse(evt.data);
+            let obj = JSON.parse(ob.msg);
+            alert(obj.temperature)
+            let temperature_ = document.getElementById("temperature_" + ob.device_id);
+            let humidity_ = document.getElementById("humidity_" + ob.device_id);
+            let PM25_ = document.getElementById("PM25_" + ob.device_id);
+            temperature_.innerHTML = obj.temperature;
+            humidity_.innerHTML = obj.humidity;
+            PM25_.innerHTML = obj.PM25;
 
         };
 
@@ -531,11 +544,7 @@
         };
 
         ws.onopen = function (evt) {
-            var content = $("#content").html();
-            $("#content").html(content + '<div style="margin-bottom: 8px">\n' +
-                '                        <p><q style="color: #eb7350">' + '服务器初始化成功...' + '</span></p>\n' +
-                '                    </div>\n' +
-                '                    <br/>');
+
             console.log('连接成功')
         };
     }

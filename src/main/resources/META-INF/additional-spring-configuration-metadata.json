@@ -4,5 +4,11 @@
       "name": "mybatis.config-locations",
       "type": "java.lang.String",
       "description": "Description for mybatis.config-locations."
-  }
-] }
+    },
+    {
+      "name": "&characterEncoding",
+      "type": "java.lang.String",
+      "description": "Description for &characterEncoding."
+    }
+  ]
+}

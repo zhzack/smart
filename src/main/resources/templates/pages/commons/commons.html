@@ -103,8 +103,14 @@
                             </div>
                         </div>
                         <div class="item-content">
-                            <button type="button" class="btn btn-secondary btn-rounded btn-fw"
+                            <button type="button" class="btn btn-secondary btn-block"
                                     onclick="addDeviceBTN()">添加设备
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-block"
+                                    onclick="addDeviceBTN()">历史消息
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-block"
+                                    onclick="addDeviceBTN()">我的发送
                             </button>
                         </div>
                     </a>
@@ -228,22 +234,36 @@
         <!--                <span class="menu-title" th:text="${device.getDevice_name()}">device_name</span>-->
         <!--            </a>-->
         <!--        </li>-->
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" th:href="@{#msg_history}" aria-expanded="false"
-               aria-controls="ui-basic">
-                <i class="mdi mdi-circle-outline menu-icon"></i>
-                <span class="menu-title mdi-48px">消息记录</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="card col" id="msg_history">
-                <div class="card-header">
-                    1565313
-                </div>
-                <div class="card-body">
-                    asdasfa
-                </div>
-            </div>
+        <!--        <li class="nav-item">-->
+        <!--            <a class="nav-link" data-toggle="collapse" th:href="@{#msg_history}" aria-expanded="false"-->
+        <!--               aria-controls="ui-basic">-->
+        <!--                <i class="mdi mdi-circle-outline menu-icon"></i>-->
+        <!--                <span class="menu-title mdi-48px">消息记录</span>-->
+        <!--                <i class="menu-arrow"></i>-->
+        <!--            </a>-->
+        <!--            <div class="card col" >-->
+        <!--                <div class="card-header">-->
+        <!--                </div>-->
+        <!--                <div class="card-body" id="msg_history">-->
+        <!--                </div>-->
+        <!--            </div>-->
 
+        <!--        </li>-->
+        <li class="nav-item">
+            <button type="button" class="btn btn-warning btn-block" onclick="addDeviceBTN()">添加设备</button>
+            <div class="card" id="addDevice"></div>
+        </li>
+        <li class="nav-item">
+            <button type="button" class="btn btn-secondary btn-block"
+                    onclick="addDeviceBTN()">历史消息
+            </button>
+            <div class="card" id="his_msg"></div>
+        </li>
+        <li class="nav-item">
+            <button type="button" class="btn btn-pinterest btn-block"
+                    onclick="addDeviceBTN()">我的发送
+            </button>
+            <div class="card" id="my_his_msg"></div>
         </li>
     </ul>
 

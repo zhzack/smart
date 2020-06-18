@@ -18,6 +18,15 @@ public class Device {
     public Device() {
     }
 
+    public Device(Integer device_id, Integer user_id) {
+        this.device_id = device_id;
+        this.user_id = user_id;
+    }
+
+    public Device(Integer user_id) {
+        this.user_id = user_id;
+    }
+
     public Device(Integer device_id, boolean status) {
         this.device_id = device_id;
         this.status = status;
