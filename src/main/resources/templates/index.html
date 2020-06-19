@@ -109,18 +109,18 @@
         let content = $("#content").html();
 
         $.ajax({
-                method: 'get',
-                url: '/devicesandmsg',
-                data: {
-                    deviceId: DeviceId,
-                    msg: writeMsg
-                },
-                success: function (to_user_id) {
-                    let jsonMsg = JSON.stringify({"msg": writeMsg, "device_id": DeviceId, "to_user_id": to_user_id});
+            method: 'get',
+            url: '/devicesendmsg',
+            data: {
+                deviceId: DeviceId,
+                msg: writeMsg
+            },
+            success: function (to_user_id) {
+                let jsonMsg = JSON.stringify({"msg": writeMsg, "device_id": DeviceId, "to_user_id": to_user_id});
 
-                    ws.send(jsonMsg);
+                ws.send(jsonMsg);
 
-                    $("#content").html(content + '<div>\n' +
+                $("#content").html(content + '<div>\n' +
                         '                        <p><q style="color: coral">客户端:</q><span>' + writeMsg + '</span></p>\n' +
                         '                    </div>\n' +
                         '                    <br/>');

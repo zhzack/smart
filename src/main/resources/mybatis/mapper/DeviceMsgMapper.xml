@@ -9,6 +9,11 @@
         insert into device_msg (device_id, to_user_id, msg)
         values (#{device_id}, #{to_user_id}, #{msg})
     </insert>
+    <select id="queryDeviceMsgByID" parameterType="int" resultType="xyz.blue.pojo.DeviceMsg">
+        select *
+        from device_msg
+        where device_id = #{deviceId}
+    </select>
 
 
 </mapper>

@@ -7,6 +7,8 @@ import xyz.blue.mapper.DeviceMsgMapper;
 import xyz.blue.pojo.DeviceMsg;
 import xyz.blue.service.DeviceMsgService;
 
+import java.util.List;
+
 @Service("DeviceMsgService")//别名
 public class DeviceMsgServiceImpl implements DeviceMsgService {
 
@@ -17,6 +19,11 @@ public class DeviceMsgServiceImpl implements DeviceMsgService {
     @Override
     public void insert_msg(DeviceMsg deviceMsg) {
         deviceMsgMapper.insert_msg(deviceMsg);
+    }
+
+    @Override
+    public List<DeviceMsg> queryDeviceMsgByID(int deviceId) {
+        return deviceMsgMapper.queryDeviceMsgByID(deviceId);
     }
 }
 

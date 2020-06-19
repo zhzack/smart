@@ -41,11 +41,11 @@
 <body>
 <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->
-    <div th:insert="~{/pages/commons/commons.html::navbar}"></div>
+    <div th:insert="~{pages/commons/commons.html::navbar}"></div>
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
         <!-- partial:partials/_sidebar.html -->
-        <div th:insert="~{/pages/commons/commons.html::siderbar}"></div>
+        <div th:insert="~{pages/commons/commons.html::siderbar}"></div>
         <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper" id="DevicesShow">
@@ -420,9 +420,7 @@
         let DeviceName = $("#DeviceName").val();
         let DeviceMac = $("#DeviceId").val();
 
-        if (DeviceMac == null || DeviceName == null) {
-            alert("您的输入有误，请检查后重新输入");
-        } else {
+
             $.ajax({
                     method: 'get',
                     url: '/addDevice',
@@ -445,7 +443,7 @@
                     }
                 }
             )
-        }
+
 
     }
 
@@ -474,17 +472,17 @@
         ws = new Socket("ws://127.0.0.1/ws/" + user_name);
 
         ws.onmessage = function (evt) {
-            alert(evt.data);
 
             let ob = JSON.parse(evt.data);
             let obj = JSON.parse(ob.msg);
-            alert(obj.temperature)
+            // alert(obj.temperature)
             let temperature_ = document.getElementById("temperature_" + ob.device_id);
             let humidity_ = document.getElementById("humidity_" + ob.device_id);
             let PM25_ = document.getElementById("PM25_" + ob.device_id);
             temperature_.innerHTML = obj.temperature;
             humidity_.innerHTML = obj.humidity;
             PM25_.innerHTML = obj.PM25;
+            // alert( obj.humidity)
 
         };
 

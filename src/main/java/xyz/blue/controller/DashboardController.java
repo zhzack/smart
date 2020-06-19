@@ -128,7 +128,7 @@ public class DashboardController {
     //        registry.addViewController("/").setViewName("/pages/samples/login-2");
     @RequestMapping({"/", "login.html"})
     public String toLogin() {
-        return "/pages/samples/login-2";
+        return "pages/samples/login-2";
     }
 
     @GetMapping("/device")
@@ -147,16 +147,16 @@ public class DashboardController {
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password);
         try {//登录成功
             subject.login(usernamePasswordToken);
-            return "redirect:/admin";
+            return "redirect:admin";
         } catch (UnknownAccountException e) {//用户名不存在
 
             model.addAttribute("msg", "用户名不存在");
 
-            return "/pages/samples/login-2";
+            return "pages/samples/login-2";
         } catch (IncorrectCredentialsException b) {//密码错误
             model.addAttribute("msg", "密码错误");
 
-            return "/pages/samples/login-2";
+            return "pages/samples/login-2";
         }
     }
 
@@ -177,7 +177,7 @@ public class DashboardController {
 
     @RequestMapping("register-2.html")
     public String register() {
-        return "/pages/samples/register-2";
+        return "pages/samples/register-2";
     }
 
 }
