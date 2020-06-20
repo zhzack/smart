@@ -22,8 +22,8 @@ public class DeviceMsgServiceImpl implements DeviceMsgService {
     }
 
     @Override
-    public List<DeviceMsg> queryDeviceMsgByID(int deviceId) {
-        return deviceMsgMapper.queryDeviceMsgByID(deviceId);
+    public List<DeviceMsg> queryDeviceMsgByID(int to_user_id) {
+        return deviceMsgMapper.queryDeviceMsgByID(to_user_id);
     }
 }
 

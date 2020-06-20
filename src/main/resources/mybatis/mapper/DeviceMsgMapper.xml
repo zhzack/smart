@@ -10,9 +10,9 @@
         values (#{device_id}, #{to_user_id}, #{msg})
     </insert>
     <select id="queryDeviceMsgByID" parameterType="int" resultType="xyz.blue.pojo.DeviceMsg">
-        select *
+        select device_msg_id, device_id, to_user_id, msg, DATE_FORMAT(date, '%W %M %Y %H:%i:%s')
         from device_msg
-        where device_id = #{deviceId}
+        where to_user_id = #{to_user_id}
     </select>
 
 

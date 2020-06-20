@@ -97,7 +97,9 @@ public class WebSocketController {
         int[] clients_id = new int[persons.length];
         for (int i = 0; i < persons.length; i++) {
             clients_id[i] = Integer.parseInt(persons[i]);
+            userMsgService.insert_msg(new UserMsg(getUser().getUser_id(), clients_id[i], msg));
         }
+
         SocketServer.SendMany(msg, clients_id);
         return "success";
     }
@@ -118,6 +120,14 @@ public class WebSocketController {
         }
 
         return object;
+    }
+
+    @RequestMapping("getOnlineDevicesByUserId")
+    @ResponseBody
+    public List<Device> getOnlineDevicesByUserId() throws NullPointerException {
+        User user = getUser();
+        List<Device> devices = getDevice(user.getUser_id());
+        return getDeviceOnLines(devices);
     }
 
 
@@ -174,18 +184,20 @@ public class WebSocketController {
         return s;
     }
 
+    /*通过用户id查询发送的数据*/
     @GetMapping("/queryUserMsgByID")
     @ResponseBody
     public List<UserMsg> queryUserMsgByID() {
-        userMsgService.insert_msg(new UserMsg(101878, 4, "55"));
-        return userMsgService.queryUserMsgByID(101878);
+//        userMsgService.insert_msg(new UserMsg(101878, 4, "55"));
+        return userMsgService.queryUserMsgByID(getUser().getUser_id());
     }
 
+    /*通过查询device_msg表中的to_user_id查询*/
     @GetMapping("/queryDeviceMsgByID")
     @ResponseBody
     public List<DeviceMsg> queryDeviceMsgByID() {
-        deviceMsgService.insert_msg(new DeviceMsg(4, 101878, "58545"));
-        return deviceMsgService.queryDeviceMsgByID(4);
+//        deviceMsgService.insert_msg(new DeviceMsg(4, 101878, "58545"));
+        return deviceMsgService.queryDeviceMsgByID(getUser().getUser_id());
     }
 
     @RequestMapping("UserSandMsg")
@@ -216,7 +228,7 @@ public class WebSocketController {
         return User_id + "";
     }*/
 
-    @RequestMapping("devicesendmsg")
+    @RequestMapping("DeviceSendMsg")
     @ResponseBody
     //DeviceId
     public String devicesendmsg(int deviceId, String msg) {

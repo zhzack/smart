@@ -1,13 +1,11 @@
 package xyz.blue.pojo;
 
-import java.util.Date;
-
 public class UserMsg {
     private int user_msg_id;
     private int user_id;
     private int to_device_id;
     private String msg;
-    private Date date;
+    private String date;
 
     @Override
     public String toString() {
@@ -16,6 +14,14 @@ public class UserMsg {
                 ", to_device_id=" + to_device_id +
                 ", msg='" + msg + '\'' +
                 '}';
+    }
+
+    public UserMsg(int user_msg_id, int user_id, int to_device_id, String msg, String date) {
+        this.user_msg_id = user_msg_id;
+        this.user_id = user_id;
+        this.to_device_id = to_device_id;
+        this.msg = msg;
+        this.date = date;
     }
 
     public int getUser_msg_id() {
@@ -50,11 +56,11 @@ public class UserMsg {
         this.msg = msg;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

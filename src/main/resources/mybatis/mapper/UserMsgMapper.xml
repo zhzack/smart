@@ -11,7 +11,7 @@
     </insert>
 
     <select id="queryUserMsgByID" parameterType="int" resultType="xyz.blue.pojo.UserMsg">
-        select *
+        select user_msg_id, user_id, to_device_id, msg, DATE_FORMAT(date, '%W %M %Y %H:%i:%s')
         from user_msg
         where user_id = #{user_id}
     </select>

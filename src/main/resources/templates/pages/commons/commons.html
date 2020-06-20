@@ -220,51 +220,89 @@
             </a>
 
             <div class="collapse" id="device-all">
-                <!--                <ul class="nav flex-column sub-menu" th:each="device: ${device}">-->
-                <!--                    <li class="nav-item"><a class="nav-link" th:text="${device.getDevice_name()}">Buttons</a>-->
-                <!--                    </li>-->
-                <!--                </ul>-->
 
             </div>
         </li>
 
-        <!--        <li class="nav-item" th:each="device: ${device}">-->
-        <!--            <a class="nav-link">-->
-        <!--                <i class="mdi mdi-view-headline menu-icon"></i>-->
-        <!--                <span class="menu-title" th:text="${device.getDevice_name()}">device_name</span>-->
-        <!--            </a>-->
-        <!--        </li>-->
-        <!--        <li class="nav-item">-->
-        <!--            <a class="nav-link" data-toggle="collapse" th:href="@{#msg_history}" aria-expanded="false"-->
-        <!--               aria-controls="ui-basic">-->
-        <!--                <i class="mdi mdi-circle-outline menu-icon"></i>-->
-        <!--                <span class="menu-title mdi-48px">消息记录</span>-->
-        <!--                <i class="menu-arrow"></i>-->
-        <!--            </a>-->
-        <!--            <div class="card col" >-->
-        <!--                <div class="card-header">-->
-        <!--                </div>-->
-        <!--                <div class="card-body" id="msg_history">-->
-        <!--                </div>-->
-        <!--            </div>-->
+        <!--我的发送-->
+        <li class="nav-item">
 
-        <!--        </li>-->
-        <li class="nav-item">
-            <button type="button" class="btn btn-warning btn-block" onclick="addDeviceBTN()">添加设备</button>
-            <div class="card" id="addDevice"></div>
+            <a class="nav-link" data-toggle="collapse" th:href="@{#my_his_msg}" aria-expanded="false"
+               aria-controls="ui-basic">
+                <i class="mdi mdi-circle-outline menu-icon"></i>
+                <span class="menu-title mdi-48px">我的发送</span>
+                <i class="menu-arrow"></i>
+            </a>
+
+            <div class="collapse" id="my_his_msg">
+
+            </div>
         </li>
+        <!--添加设备-->
         <li class="nav-item">
-            <button type="button" class="btn btn-secondary btn-block"
-                    onclick="addDeviceBTN()">历史消息
-            </button>
-            <div class="card" id="his_msg"></div>
+
+            <a class="nav-link" data-toggle="collapse" th:href="@{#addDevice}" aria-expanded="false"
+               aria-controls="ui-basic">
+                <i class="mdi mdi-circle-outline menu-icon"></i>
+                <span class="menu-title mdi-48px">添加设备</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="card" id="addDevice">
+                <form class="forms-sample" name="AddDevice">
+                    <div class="form-group row">
+                        <div class="col-sm-9">
+                            <label for="device_name">设备名称</label>
+                            <input type="text" class="form-control" id="device_name" placeholder="设备名称">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-9">
+                            <label for="device_mac">设备MAC</label>
+                            <input type="text" class="form-control" id="device_mac"
+                                   placeholder="设备MAC">
+                        </div>
+                    </div>
+                    <button type="button" onclick="addDevice()" class="btn btn-primary btn-block ">添加</button>
+
+                </form>
+            </div>
         </li>
+        <!--历史消息-->
         <li class="nav-item">
-            <button type="button" class="btn btn-pinterest btn-block"
-                    onclick="addDeviceBTN()">我的发送
-            </button>
-            <div class="card" id="my_his_msg"></div>
+            <a class="nav-link" data-toggle="collapse" th:href="@{#his_msg}" aria-expanded="false"
+               aria-controls="ui-basic">
+                <i class="mdi mdi-circle-outline menu-icon"></i>
+                <span class="menu-title mdi-48px">历史消息</span>
+                <i class="menu-arrow"></i>
+            </a>
+
+            <div class="collapse" id="his_msg">
+
+            </div>
         </li>
+        <!--           <li class="nav-item" th:each="device: ${device}">
+                       <a class="nav-link">
+                           <i class="mdi mdi-view-headline menu-icon"></i>
+                           <span class="menu-title" th:text="${device.getDevice_name()}">device_name</span>
+                       </a>
+                   </li>
+                   <li class="nav-item">
+                       <a class="nav-link" data-toggle="collapse" th:href="@{#msg_history}" aria-expanded="false"
+                          aria-controls="ui-basic">
+                           <i class="mdi mdi-circle-outline menu-icon"></i>
+                           <span class="menu-title mdi-48px">消息记录</span>
+                           <i class="menu-arrow"></i>
+                       </a>
+                       <div class="card col" >
+                           <div class="card-header">
+                           </div>
+                           <div class="card-body" id="msg_history">
+                           </div>
+                       </div>
+
+                   </li>-->
+
+
     </ul>
 
 </nav>

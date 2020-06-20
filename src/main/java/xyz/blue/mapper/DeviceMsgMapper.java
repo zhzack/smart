@@ -12,5 +12,5 @@ import java.util.List;
 public interface DeviceMsgMapper {
     void insert_msg(DeviceMsg deviceMsg);
 
-    List<DeviceMsg> queryDeviceMsgByID(int deviceId);
+    List<DeviceMsg> queryDeviceMsgByID(int to_user_id);
 }
