@@ -6,29 +6,29 @@
 
     <select id="queryUserList" resultType="xyz.blue.pojo.User">
         select *
-        from user
+        from tb_user
     </select>
 
 
     <select id="queryUserByID" parameterType="int" resultType="xyz.blue.pojo.User">
         select *
-        from user
+        from tb_user
         where user_id = #{id}
     </select>
 
     <select id="queryUserByName" parameterType="String" resultType="xyz.blue.pojo.User">
         select *
-        from user
+        from tb_user
         where user_name = #{name}
     </select>
 
     <select id="addUser" resultType="java.lang.Object">
-        insert into user( user_name, user_pwd)
+        insert into tb_user(user_name, user_pwd)
         values (#{user_name}, #{user_pwd})
     </select>
 
     <select id="updateUser" resultType="java.lang.Integer">
-        update user
+        update tb_user
         set user_name= #{user_name},
             user_pwd = #{user_pwd}
         where user_id = #{user_id}
@@ -36,7 +36,7 @@
 
     <select id="deleteUser" resultType="int">
         delete
-        from user
+        from tb_user
         where user_id = #{user_id}
     </select>
 

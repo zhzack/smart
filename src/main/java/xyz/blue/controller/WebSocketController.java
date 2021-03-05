@@ -190,6 +190,7 @@ public class WebSocketController {
     public List<UserMsg> queryUserMsgByID() {
 //        userMsgService.insert_msg(new UserMsg(101878, 4, "55"));
         return userMsgService.queryUserMsgByID(getUser().getUser_id());
+
     }
 
     /*通过查询device_msg表中的to_user_id查询*/
@@ -240,7 +241,7 @@ public class WebSocketController {
                 object = deviceService.query_deviceById(deviceId).getUser_id();
                 try {
                     DeviceMsg deviceMsg = new DeviceMsg(deviceId, object, msg);
-                    System.out.println(deviceMsg.toString());
+                    System.out.println(deviceMsg);
                     deviceMsgService.insert_msg(deviceMsg);
                 } catch (NullPointerException e) {
                     System.out.println(nowdate.nowDate() + "插入信息失败");

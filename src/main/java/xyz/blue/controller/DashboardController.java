@@ -36,14 +36,14 @@ public class DashboardController {
     DeviceMsgService deviceMsgService;
 
 
-    @GetMapping("/que")
-    @ResponseBody
-    public List<User> lis() {
-
-        List<User> usersList = userService.queryUserList();
-        System.out.println(usersList.toString());
-        return usersList;
-    }
+//    @GetMapping("/que")
+//    @ResponseBody
+//    public List<User> lis() {
+//
+//        List<User> usersList = userService.queryUserList();
+//        System.out.println(usersList.toString());
+//        return usersList;
+//    }
 
     @GetMapping("/insert")
     @ResponseBody
@@ -137,7 +137,7 @@ public class DashboardController {
 
         List<Device> device = deviceService.queryDeviceList();
         device.addAll(deviceService.queryDeviceListByUserID(101878));
-        System.out.println(device.toString());
+        System.out.println(device);
         return device;
     }
 
