@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+    function ask_pwd(failed) {
+        if (failed) {
+
+            let device_mac;
+            let device_id;
+            $.ajax({
+                method: 'get',
+                url: '/ask_pwd',
+                data: {
+                    "device_id": device_id,
+                    "device_mac": device_mac
+                },
+                success: function (data) {
+                    // ws.send(jsonMsg)
+                    //使用接口向后台发消息，后台服务在进行转发
+                    let myDate = new Date();
+                    let item = {
+                        "msg": child_device_name,
+                        "date": myDate.toLocaleString(),
+                        "to_device_id": device_id
+                    }
+                    add_my_his_msg(item)
+                    alert("发送成功")
+                    console.log(data);
+                }
+            })
+
+        }
+    }
+</script>
+</html>
