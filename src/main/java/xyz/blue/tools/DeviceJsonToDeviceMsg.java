@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import xyz.blue.pojo.DeviceMsg;
 
 public class DeviceJsonToDeviceMsg {
+
     /*
      * 解析设备发送的json转对象
      * */
@@ -15,8 +16,13 @@ public class DeviceJsonToDeviceMsg {
             JSONObject obj = JSON.parseObject(msg);
 
             if (obj.size() == 3) {
-                return new DeviceMsg(obj.getInteger("device_id"), obj.getInteger("to_user_id"), obj.getString("msg"));
+                try {
+                    return new DeviceMsg(obj.getInteger("device_id"), obj.getInteger("to_user_id"), obj.getString("msg"));
+                } catch (Exception n) {
+                    return null;
+                }
             } else {
+                //解析错误：key键不对应，数据类型错误
                 return null;
             }
 
