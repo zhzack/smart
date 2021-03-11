@@ -26,7 +26,8 @@ public class ShiroConfig {
         * perms：拥有对某资源的权限
         * role：拥有某个角色权限
         * */
-        filterMap.put("/pages/charts/**","perms[user:elements]");
+        filterMap.put("/pages/charts/**", "perms[user:elements]");
+        filterMap.put("/pages/api/**", "anon");
         //filterMap.put("/**", "authc");
 
         // 配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了

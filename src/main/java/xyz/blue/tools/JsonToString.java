@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import xyz.blue.pojo.DeviceMsg;
 
-public class DeviceJsonToDeviceMsg {
+public class JsonToString {
 
     /*
      * 解析设备发送的json转对象
@@ -29,5 +29,15 @@ public class DeviceJsonToDeviceMsg {
         } catch (JSONException e) {
             return null;
         }
+    }
+
+    public static String DeviceMsg(String msg) {
+
+
+        JSONObject obj = JSON.parseObject(msg);
+
+        return null;
+
+
     }
 }
