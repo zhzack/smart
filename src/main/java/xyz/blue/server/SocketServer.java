@@ -7,11 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.blue.config.StatusConstant;
 import xyz.blue.pojo.Client;
-import xyz.blue.pojo.DeviceMsg;
 import xyz.blue.pojo.User;
 import xyz.blue.service.impl.DeviceServiceImpl;
 import xyz.blue.service.impl.UserServiceImpl;
-import xyz.blue.tools.JsonToString;
 import xyz.blue.tools.NowDate;
 
 import javax.websocket.*;
@@ -37,8 +35,7 @@ public class SocketServer implements StatusConstant {
     @Autowired
     UserServiceImpl userService;
 
-    user_Log user_log;
-    device_Log device_log;
+
     /**
      * 用线程安全的CopyOnWriteArraySet来存放客户端连接的信息
      */
@@ -51,10 +48,10 @@ public class SocketServer implements StatusConstant {
     private Session session;
 
     NowDate nowdate = new NowDate();
-    /**
-     * 服务端的userName,因为用的是set，每个客户端的username必须不一样，否则会被覆盖。
-     * 要想完成ui界面聊天的功能，服务端也需要作为客户端来接收后台推送用户发送的信息
-     */
+//    /**
+//     * 服务端的userName,因为用的是set，每个客户端的username必须不一样，否则会被覆盖。
+//     * 要想完成ui界面聊天的功能，服务端也需要作为客户端来接收后台推送用户发送的信息
+//     */
 
     /**
      * 用户连接时触发，我们将其添加到
@@ -128,7 +125,6 @@ public class SocketServer implements StatusConstant {
      * 所以我们在发送的时候将服务端排除掉
      * message
      *
-     * @param message
      */
     public synchronized static void sendAll(Map<String, Object> message) {
         if (!socketServers.isEmpty()) {
@@ -144,7 +140,7 @@ public class SocketServer implements StatusConstant {
 
             logger.info("服务端推送给所有客户端 :【{}】", message);
         } else {
-            logger.info("现在没有设备连接", message);
+            logger.info("现在没有设备连接");
         }
 
     }
@@ -186,7 +182,6 @@ public class SocketServer implements StatusConstant {
     /**
      * 获取在线用户名，前端界面需要用到
      *
-     * @return
      */
     public synchronized static List<Integer> getOnlineUsers() {
 
@@ -209,16 +204,17 @@ public class SocketServer implements StatusConstant {
         Client client = socketServers.stream().filter(cli -> cli.getSession() == session)
                 .collect(Collectors.toList()).get(0);
 
-        DeviceMsg deviceMsg = JsonToString.ToDeviceMsg(message);
-        logger.info(message);
-        if (deviceMsg != null) {
-//            sendMessage(client.getClient_id() + "<--" + deviceMsg.getMsg(), deviceMsg.getTo_user_id());
-            sendMessage(message, deviceMsg.getTo_user_id());
-
-            logger.info("客户端:【{}】向客户端【{}】发送信息:{}", client.getClient_id(), deviceMsg.getTo_user_id(), deviceMsg.getMsg());
-        } else {
-            sendMessage("您的数据格式有误,请检查后发送<----->" + message, client.getClient_id());
-        }
+        OnMessageTool.onMessage(message, client);
+//        DeviceMsg deviceMsg = JsonToString.ToDeviceMsg(message);
+//        logger.info(message);
+//        if (deviceMsg != null) {
+////            sendMessage(client.getClient_id() + "<--" + deviceMsg.getMsg(), deviceMsg.getTo_user_id());
+//            sendMessage(message, deviceMsg.getTo_user_id());
+//
+//            logger.info("客户端:【{}】向客户端【{}】发送信息:{}", client.getClient_id(), deviceMsg.getTo_user_id(), deviceMsg.getMsg());
+//        } else {
+//            sendMessage("您的数据格式有误,请检查后发送<----->" + message, client.getClient_id());
+//        }
 
     }
 

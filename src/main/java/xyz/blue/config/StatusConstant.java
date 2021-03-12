@@ -1,9 +1,15 @@
 package xyz.blue.config;
 
 public interface StatusConstant {
-    String message = "00";//常规信息
-    String contest = "01";//心跳包
-    String request = "02";//请求
-    String respond = "03";//回应
+    int BEGININFOCODE = 0;//身份
+    int ENDINFOCODE = 2;//身份
+    String MESSAGE = "00";
+    String REQUEST = "01";
+    String RESPOND = "02";
+    String CONTEST = "03";
 
+
+    int IDENTITYCODE = 2;
+    String DEVICE = "1";
+    String USER = "0";
 }
