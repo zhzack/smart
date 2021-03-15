@@ -43,6 +43,17 @@ public class OnMessageTool implements StatusConstant {
 
     public static void message(String message, Client client) {
         logger.info("信息");
+       String msg= String.valueOf(message.charAt(IDENTITYCODE));
+        switch (msg){
+            case DEVICE:
+
+                break;
+            case USER:
+                break;
+            default:
+                break;
+        }
+
     }
 
     public static void request(String message, Client client) {
