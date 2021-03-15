@@ -1,14 +1,14 @@
-package xyz.blue.server;
+package xyz.blue.server.messageTool;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import xyz.blue.config.StatusConstant;
 import xyz.blue.pojo.Client;
+import xyz.blue.server.SocketServer;
 
 public class OnMessageTool implements StatusConstant {
     private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
 
-    public static void onMessage(String message, Client client) {
+    public static void MsgInfoCode(String message, Client client) {
         if (!message.isEmpty()) {
             //判断信息信息识别码位置
             if (message.length() >= ENDINFOCODE) {
@@ -16,23 +16,23 @@ public class OnMessageTool implements StatusConstant {
 
                 switch (msgInfoCode) {
                     case MESSAGE:
-                        logger.info("信息");
+
                         message(message, client);
                         break;
                     case REQUEST:
-                        logger.info("请求");
+
                         request(message, client);
                         break;
                     case RESPOND:
-                        logger.info("响应");
+
                         respond(message, client);
                         break;
                     case CONTEST:
-                        logger.info("心跳");
+
                         contest(message, client);
                         break;
                     default:
-                        logger.info("不规范的");
+
                         error_msgInfoCode(message, client);
                         break;
                 }
@@ -42,22 +42,22 @@ public class OnMessageTool implements StatusConstant {
 
 
     public static void message(String message, Client client) {
-
+        logger.info("信息");
     }
 
     public static void request(String message, Client client) {
-
+        logger.info("请求");
     }
 
     public static void respond(String message, Client client) {
-
+        logger.info("响应");
     }
 
     public static void contest(String message, Client client) {
-
+        logger.info("心跳");
     }
 
     public static void error_msgInfoCode(String message, Client client) {
-
+        logger.info("不规范的");
     }
 }

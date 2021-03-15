@@ -1,4 +1,4 @@
-package xyz.blue.config;
+package xyz.blue.server.messageTool;
 
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;

@@ -1,4 +1,4 @@
-package xyz.blue.config;
+package xyz.blue.server.messageTool;
 
 public interface StatusConstant {
     int BEGININFOCODE = 0;//身份

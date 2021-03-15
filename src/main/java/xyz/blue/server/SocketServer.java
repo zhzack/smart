@@ -5,9 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import xyz.blue.config.StatusConstant;
 import xyz.blue.pojo.Client;
 import xyz.blue.pojo.User;
+import xyz.blue.server.messageTool.OnMessageTool;
+import xyz.blue.server.messageTool.StatusConstant;
 import xyz.blue.service.impl.DeviceServiceImpl;
 import xyz.blue.service.impl.UserServiceImpl;
 import xyz.blue.tools.NowDate;
@@ -204,7 +205,7 @@ public class SocketServer implements StatusConstant {
         Client client = socketServers.stream().filter(cli -> cli.getSession() == session)
                 .collect(Collectors.toList()).get(0);
 
-        OnMessageTool.onMessage(message, client);
+        OnMessageTool.MsgInfoCode(message, client);
 //        DeviceMsg deviceMsg = JsonToString.ToDeviceMsg(message);
 //        logger.info(message);
 //        if (deviceMsg != null) {
