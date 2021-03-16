@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.blue.mapper.MsgMapper">
+    <resultMap id="BaseResultMap" type="xyz.blue.pojo.Msg">
+        <id column="msg_id" jdbcType="INTEGER" property="msg_id"/>
+        <result column="msg_infoCode" jdbcType="CHAR" property="msg_infoCode"/>
+        <result column="msg_identityCode" jdbcType="INTEGER" property="msg_identityCode"/>
+        <result column="msg_sent_id" jdbcType="INTEGER" property="msg_sent_id"/>
+        <result column="msg_receive_id" jdbcType="INTEGER" property="msg_receive_id"/>
+        <result column="msg_sent_date" jdbcType="TIMESTAMP" property="msg_sent_date"/>
+        <result column="msg_text" jdbcType="CHAR" property="msg_text"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        msg_id, msg_infoCode, msg_identityCode, msg_sent_id, msg_receive_id, msg_sent_date,
+    msg_text
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from MSG
+        where msg_id = #{msg_id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from MSG
+        where msg_id = #{msg_id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="msg_id" keyProperty="msg_id" parameterType="xyz.blue.pojo.Msg"
+            useGeneratedKeys="true">
+        insert into MSG (msg_infoCode, msg_identityCode, msg_sent_id,
+                         msg_receive_id, msg_text)
+        values (#{msg_infoCode,jdbcType=CHAR}, #{msg_identityCode,jdbcType=INTEGER}, #{msg_sent_id,jdbcType=INTEGER},
+                #{msg_receive_id,jdbcType=INTEGER}, #{msg_text,jdbcType=CHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="msg_id" keyProperty="msg_id" parameterType="xyz.blue.pojo.Msg"
+            useGeneratedKeys="true">
+        insert into MSG
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="msg_infoCode != null">
+                msg_infoCode,
+            </if>
+            <if test="msg_identityCode != null">
+                msg_identityCode,
+            </if>
+            <if test="msg_sent_id != null">
+                msg_sent_id,
+            </if>
+            <if test="msg_receive_id != null">
+                msg_receive_id,
+            </if>
+            <if test="msg_sent_date != null">
+                msg_sent_date,
+            </if>
+            <if test="msg_text != null">
+                msg_text,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="msg_infoCode != null">
+                #{msg_infoCode,jdbcType=CHAR},
+            </if>
+            <if test="msg_identityCode != null">
+                #{msg_identityCode,jdbcType=INTEGER},
+            </if>
+            <if test="msg_sent_id != null">
+                #{msg_sent_id,jdbcType=INTEGER},
+            </if>
+            <if test="msg_receive_id != null">
+                #{msg_receive_id,jdbcType=INTEGER},
+            </if>
+            <if test="msg_sent_date != null">
+                #{msg_sent_date,jdbcType=TIMESTAMP},
+            </if>
+            <if test="msg_text != null">
+                #{msg_text,jdbcType=CHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="xyz.blue.pojo.Msg">
+        update MSG
+        <set>
+            <if test="msg_infoCode != null">
+                msg_infoCode = #{msg_infoCode,jdbcType=CHAR},
+            </if>
+            <if test="msg_identityCode != null">
+                msg_identityCode = #{msg_identityCode,jdbcType=INTEGER},
+            </if>
+            <if test="msg_sent_id != null">
+                msg_sent_id = #{msg_sent_id,jdbcType=INTEGER},
+            </if>
+            <if test="msg_receive_id != null">
+                msg_receive_id = #{msg_receive_id,jdbcType=INTEGER},
+            </if>
+            <if test="msg_sent_date != null">
+                msg_sent_date = #{msg_sent_date,jdbcType=TIMESTAMP},
+            </if>
+            <if test="msg_text != null">
+                msg_text = #{msg_text,jdbcType=CHAR},
+            </if>
+        </set>
+        where msg_id = #{msg_id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="xyz.blue.pojo.Msg">
+        update MSG
+        set msg_infoCode     = #{msg_infoCode,jdbcType=CHAR},
+            msg_identityCode = #{msg_identityCode,jdbcType=INTEGER},
+            msg_sent_id      = #{msg_sent_id,jdbcType=INTEGER},
+            msg_receive_id   = #{msg_receive_id,jdbcType=INTEGER},
+            msg_sent_date    = #{msg_sent_date,jdbcType=TIMESTAMP},
+            msg_text         = #{msg_text,jdbcType=CHAR}
+        where msg_id = #{msg_id,jdbcType=INTEGER}
+    </update>
+</mapper>
