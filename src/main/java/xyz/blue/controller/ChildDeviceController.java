@@ -3,11 +3,14 @@ package xyz.blue.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import xyz.blue.pojo.ChildDevice;
+import xyz.blue.pojo.Msg;
 import xyz.blue.service.ChildDeviceService;
 import xyz.blue.service.DeviceMsgService;
+import xyz.blue.service.MsgService;
 import xyz.blue.service.impl.DeviceServiceImpl;
 import xyz.blue.service.impl.UserServiceImpl;
 
@@ -27,6 +30,16 @@ public class ChildDeviceController {
     DeviceMsgService deviceMsgService;
     @Autowired
     ChildDeviceService childDeviceService;
+    @Autowired
+    MsgService msgService;
+
+    @RequestMapping("/insert_msg")
+    @ResponseBody
+    public void insert_msg() {
+        Msg msg = new Msg("00", "1", "00000001", "00000002", "123");
+
+        msgService.insert(msg);
+    }
 
     /*
      * q_:查询

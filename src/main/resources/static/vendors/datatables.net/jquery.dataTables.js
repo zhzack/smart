@@ -1124,26 +1124,21 @@
 			 * Columns
 			 * See if we should load columns automatically or use defined ones
 			 */
-			var anThs = [];
-			var aoColumnsInit;
-			var nThead = this.getElementsByTagName('thead');
-			if ( nThead.length !== 0 )
-			{
-				_fnDetectHeader( oSettings.aoHeader, nThead[0] );
-				anThs = _fnGetUniqueThs( oSettings );
-			}
-			
-			/* If not given a column array, generate one with nulls */
-			if ( oInit.aoColumns === null )
-			{
-				aoColumnsInit = [];
-				for ( i=0, iLen=anThs.length ; i<iLen ; i++ )
-				{
-					aoColumnsInit.push( null );
-				}
-			}
-			else
-			{
+            var anThs = [];
+            var aoColumnsInit;
+            var nThead = this.getElementsByTagName('thead');
+            if (nThead.length !== 0) {
+                _fnDetectHeader(oSettings.aoHeader, nThead[0]);
+                anThs = _fnGetUniqueThs(oSettings);
+            }
+
+            /* If not given a column array, xyz.blue.mapper.generate one with nulls */
+            if (oInit.aoColumns === null) {
+                aoColumnsInit = [];
+                for (i = 0, iLen = anThs.length; i < iLen; i++) {
+                    aoColumnsInit.push(null);
+                }
+            } else {
 				aoColumnsInit = oInit.aoColumns;
 			}
 			
@@ -4433,13 +4428,13 @@
 			_fnEscapeRegex( search );
 		
 		if ( smart ) {
-			/* For smart filtering we want to allow the search to work regardless of
-			 * word order. We also want double quoted text to be preserved, so word
-			 * order is important - a la google. So this is what we want to
-			 * generate:
-			 * 
-			 * ^(?=.*?\bone\b)(?=.*?\btwo three\b)(?=.*?\bfour\b).*$
-			 */
+            /* For smart filtering we want to allow the search to work regardless of
+             * word order. We also want double quoted text to be preserved, so word
+             * order is important - a la google. So this is what we want to
+             * xyz.blue.mapper.generate:
+             *
+             * ^(?=.*?\bone\b)(?=.*?\btwo three\b)(?=.*?\bfour\b).*$
+             */
 			var a = $.map( search.match( /"[^"]+"|[^ ]+/g ) || [''], function ( word ) {
 				if ( word.charAt(0) === '"' ) {
 					var m = word.match( /^"(.*)"$/ );
@@ -5054,23 +5049,23 @@
 		if ( ! footer.length ) {
 			footer = null;
 		}
-	
-		/*
-		 * The HTML structure that we want to generate in this function is:
-		 *  div - scroller
-		 *    div - scroll head
-		 *      div - scroll head inner
-		 *        table - scroll head table
-		 *          thead - thead
-		 *    div - scroll body
-		 *      table - table (master table)
-		 *        thead - thead clone for sizing
-		 *        tbody - tbody
-		 *    div - scroll foot
-		 *      div - scroll foot inner
-		 *        table - scroll foot table
-		 *          tfoot - tfoot
-		 */
+
+        /*
+         * The HTML structure that we want to xyz.blue.mapper.generate in this function is:
+         *  div - scroller
+         *    div - scroll head
+         *      div - scroll head inner
+         *        table - scroll head table
+         *          thead - thead
+         *    div - scroll body
+         *      table - table (master table)
+         *        thead - thead clone for sizing
+         *        tbody - tbody
+         *    div - scroll foot
+         *      div - scroll foot inner
+         *        table - scroll foot table
+         *          tfoot - tfoot
+         */
 		var scroller = $( _div, { 'class': classes.sScrollWrapper } )
 			.append(
 				$(_div, { 'class': classes.sScrollHead } )
@@ -11973,22 +11968,22 @@
 		 *  @deprecated 1.10. Please use `ajax` for this functionality now.
 		 */
 		"sServerMethod": "GET",
-	
-	
-		/**
-		 * DataTables makes use of renderers when displaying HTML elements for
-		 * a table. These renderers can be added or modified by plug-ins to
-		 * generate suitable mark-up for a site. For example the Bootstrap
-		 * integration plug-in for DataTables uses a paging button renderer to
-		 * display pagination buttons in the mark-up required by Bootstrap.
-		 *
-		 * For further information about the renderers available see
-		 * DataTable.ext.renderer
-		 *  @type string|object
-		 *  @default null
-		 *
-		 *  @name DataTable.defaults.renderer
-		 *
+
+
+        /**
+         * DataTables makes use of renderers when displaying HTML elements for
+         * a table. These renderers can be added or modified by plug-ins to
+         * xyz.blue.mapper.generate suitable mark-up for a site. For example the Bootstrap
+         * integration plug-in for DataTables uses a paging button renderer to
+         * display pagination buttons in the mark-up required by Bootstrap.
+         *
+         * For further information about the renderers available see
+         * DataTable.ext.renderer
+         *  @type string|object
+         *  @default null
+         *
+         *  @name DataTable.defaults.renderer
+         *
 		 */
 		"renderer": null,
 	

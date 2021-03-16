@@ -2,10 +2,15 @@ package xyz.blue.server.messageTool;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import xyz.blue.pojo.Client;
+import xyz.blue.pojo.Msg;
 import xyz.blue.server.SocketServer;
+import xyz.blue.service.MsgService;
 
 public class OnMessageTool implements StatusConstant {
+    @Autowired
+    MsgService msgService;
     private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
 
     public static void MsgInfoCode(String message, Client client) {
@@ -13,7 +18,6 @@ public class OnMessageTool implements StatusConstant {
             //判断信息信息识别码位置
             if (message.length() >= ENDINFOCODE) {
                 String msgInfoCode = message.substring(BEGININFOCODE, ENDINFOCODE);
-
                 switch (msgInfoCode) {
                     case MESSAGE:
 
@@ -43,6 +47,11 @@ public class OnMessageTool implements StatusConstant {
 
     public static void message(String message, Client client) {
         logger.info("信息");
+        if (message.length() > MSGBEGIN) {
+            Msg msg = new Msg(message);
+            SocketServer.sendMessage(msg.getMsg_text(), Integer.parseInt(msg.getMsg_receive_id()));
+            logger.info(msg.toString());
+        }
     }
 
     public static void request(String message, Client client) {
@@ -59,5 +68,6 @@ public class OnMessageTool implements StatusConstant {
 
     public static void error_msgInfoCode(String message, Client client) {
         logger.info("不规范的");
+
     }
 }

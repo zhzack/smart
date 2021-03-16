@@ -1,7 +1,6 @@
 package xyz.blue.service.impl;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.blue.mapper.UserMsgMapper;
 import xyz.blue.pojo.UserMsg;
@@ -13,8 +12,11 @@ import java.util.List;
 public class UserMsgServiceImpl implements UserMsgService {
 
 
-    @Autowired
-    private UserMsgMapper userMsgMapper;
+    private final UserMsgMapper userMsgMapper;
+
+    public UserMsgServiceImpl(UserMsgMapper userMsgMapper) {
+        this.userMsgMapper = userMsgMapper;
+    }
 
     @Override
     public void insert_msg(UserMsg userMsg) {
