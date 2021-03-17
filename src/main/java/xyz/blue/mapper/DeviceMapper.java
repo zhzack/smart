@@ -24,7 +24,7 @@ public interface DeviceMapper {
 
 
     //通过设备id查找设备
-    Device query_deviceById(int deviceId);
+    List<Device> query_deviceById(int deviceId);
 
     //删除设备
     void del_deviceById(int deviceId);

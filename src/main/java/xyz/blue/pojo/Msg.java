@@ -27,26 +27,58 @@ public class Msg implements Serializable, StatusConstant {
     public Msg(String message) {
         this.msg_infoCode = message.substring(BEGININFOCODE, ENDINFOCODE);
         this.msg_identityCode = String.valueOf(message.charAt(IDENTITYCODE));
-        if (msg_identityCode.equals(DEVICE)) {
-            this.msg_sent_id = message.substring(BEGINSENTID, ENDSENTID);
-            for (int i = 0; i < ENDRECEIVEID; i++) {
-                if (!String.valueOf(message.charAt(i + BEGINRECEIVEID)).equals("0")) {
-                    int beginReceiveID = i + BEGINRECEIVEID;
-                    this.msg_receive_id = message.substring(beginReceiveID, ENDRECEIVEID);
-                    break;
+        switch (msg_identityCode) {
+            //设备对设备
+            case DEVICETODEVICE:
+                this.msg_receive_id = message.substring(BEGINRECEIVEID, ENDRECEIVEID);
+                this.msg_sent_id = message.substring(BEGINSENTID, ENDSENTID);
+                break;
+            //用户对用户
+            case USERTOUSER:
+                for (int i = 0; i < ENDSENTID; i++) {
+                    if (!String.valueOf(message.charAt(i + BEGINSENTID)).equals("0")) {
+                        int beginSentID = i + BEGINSENTID;
+                        this.msg_sent_id = message.substring(beginSentID, ENDSENTID);
+                        break;
+                    }
                 }
-            }
-        } else if (msg_identityCode.equals(USER)) {
-            for (int i = 0; i < ENDSENTID; i++) {
-                if (!String.valueOf(message.charAt(i + BEGINSENTID)).equals("0")) {
-                    int beginSentID = i + BEGINSENTID;
-                    this.msg_sent_id = message.substring(beginSentID, ENDSENTID);
-                    break;
+                for (int i = 0; i < ENDRECEIVEID; i++) {
+                    if (!String.valueOf(message.charAt(i + BEGINRECEIVEID)).equals("0")) {
+                        int beginReceiveID = i + BEGINRECEIVEID;
+                        this.msg_receive_id = message.substring(beginReceiveID, ENDRECEIVEID);
+                        break;
+                    }
                 }
-            }
-            this.msg_receive_id = message.substring(BEGINRECEIVEID, ENDRECEIVEID);
-        }
+                break;
+            //设备对用户
+            case DEVICETOUSER:
+                this.msg_sent_id = message.substring(BEGINSENTID, ENDSENTID);
+                for (int i = 0; i < ENDRECEIVEID; i++) {
+                    if (!String.valueOf(message.charAt(i + BEGINRECEIVEID)).equals("0")) {
+                        int beginReceiveID = i + BEGINRECEIVEID;
+                        this.msg_receive_id = message.substring(beginReceiveID, ENDRECEIVEID);
+                        break;
+                    }
+                }
+                break;
+            //用户对设备
+            case USERTODEVICE:
+                for (int i = 0; i < ENDSENTID; i++) {
+                    if (!String.valueOf(message.charAt(i + BEGINSENTID)).equals("0")) {
+                        int beginSentID = i + BEGINSENTID;
+                        this.msg_sent_id = message.substring(beginSentID, ENDSENTID);
+                        break;
+                    }
+                }
+                this.msg_receive_id = message.substring(BEGINRECEIVEID, ENDRECEIVEID);
+                break;
 
+            //格式不正确
+            default:
+                this.msg_receive_id = null;
+                this.msg_sent_id = null;
+                break;
+        }
 
         this.msg_text = message.substring(MSGBEGIN);
 

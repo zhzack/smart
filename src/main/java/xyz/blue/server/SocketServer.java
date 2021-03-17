@@ -19,7 +19,6 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
@@ -49,44 +48,12 @@ public class SocketServer implements StatusConstant {
     private Session session;
 
     NowDate nowdate = new NowDate();
-//    /**
-//     * 服务端的userName,因为用的是set，每个客户端的username必须不一样，否则会被覆盖。
-//     * 要想完成ui界面聊天的功能，服务端也需要作为客户端来接收后台推送用户发送的信息
-//     */
 
-    /**
-     * 用户连接时触发，我们将其添加到
-     * 保存客户端连接信息的socketServers中
-     * <p>
-     * session
-     * userName
-     */
-    @OnOpen
-    public void open(Session session, @PathParam(value = "userName") Integer client_id) {
-
-        this.session = session;
-        boolean noDevice = true;
-        for (Client client : socketServers) {
-            if (Objects.equals(client.getClient_id(), client_id)) {
-                noDevice = false;
-                onClose();
-                break;
-            }
-        }
-        if (noDevice) {
-            socketServers.add(new Client(client_id, session));
-
-            logger.info(nowdate.nowDate() + "客户端:【{}】连接成功", client_id);
-
-        }
-
-
-    }
 
     public synchronized static void sendAll() {
         if (!socketServers.isEmpty()) {
             //群发，不能发送给服务端自己
-            socketServers.stream().filter(cli -> !cli.getClient_id().equals(123))
+            socketServers.stream().filter(cli -> true)
                     .forEach(client -> {
                         try {
                             client.getSession().getBasicRemote().sendText("ok");
@@ -99,6 +66,26 @@ public class SocketServer implements StatusConstant {
         } else {
             logger.info("现在没有设备连接");
         }
+    }
+
+    /**
+     * 信息发送的方法，通过客户端的userName
+     * 拿到其对应的session，调用信息推送的方法
+     * message
+     * client_id
+     */
+    public synchronized static void sendMessage(String message, String client_id) {
+
+        socketServers.forEach(client -> {
+            if (client.getClient_id().equals(client_id)) {
+                try {
+                    client.getSession().getBasicRemote().sendText(message + "");
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 
@@ -125,7 +112,6 @@ public class SocketServer implements StatusConstant {
      * 信息群发，我们要排除服务端自己不接收到推送信息
      * 所以我们在发送的时候将服务端排除掉
      * message
-     *
      */
     public synchronized static void sendAll(Map<String, Object> message) {
         if (!socketServers.isEmpty()) {
@@ -146,24 +132,8 @@ public class SocketServer implements StatusConstant {
 
     }
 
-    /**
-     * 信息发送的方法，通过客户端的userName
-     * 拿到其对应的session，调用信息推送的方法
-     * message
-     * client_id
-     */
-    public synchronized static void sendMessage(String message, int client_id) {
-
-        socketServers.forEach(client -> {
-            if ((client.getClient_id()) == client_id) {
-                try {
-                    client.getSession().getBasicRemote().sendText(message + "");
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    public synchronized static int getOnlineNums() {
+        return socketServers.size();
     }
 
     /**
@@ -182,15 +152,25 @@ public class SocketServer implements StatusConstant {
 
     /**
      * 获取在线用户名，前端界面需要用到
-     *
      */
-    public synchronized static List<Integer> getOnlineUsers() {
+    public synchronized static List<String> getOnlineUsers() {
 
         User user = (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
 
         return socketServers.stream()
                 .map(Client::getClient_id)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 多个人发送给指定的几个用户
+     * message
+     * persons
+     */
+    public synchronized static void SendMany(String message, String[] persons) {
+        for (String client_id : persons) {
+            sendMessage(message, client_id);
+        }
     }
 
     /**
@@ -238,14 +218,34 @@ public class SocketServer implements StatusConstant {
     }
 
     /**
-     * 多个人发送给指定的几个用户
-     * message
-     * persons
+     * 用户连接时触发，我们将其添加到
+     * 保存客户端连接信息的socketServers中
+     * <p>
+     * session
+     * userName
      */
-    public synchronized static void SendMany(String message, int[] persons) {
-        for (int client_id : persons) {
-            sendMessage(message, client_id);
+    @OnOpen
+    public void open(Session session, @PathParam(value = "userName") String client_id) {
+
+        this.session = session;
+/*
+        检测是否已经使用此id连接，这里使用多用户同时连接，故注释
+        for (Client client : socketServers) {
+            if (Objects.equals(client.getClient_id(), client_id)) {
+                noDevice = false;
+                onClose();
+                break;
+            }
         }
+*/
+        for (int i = 0; i < client_id.length(); i++) {
+            if (!String.valueOf(client_id.charAt(i)).equals("0")) {
+                client_id = client_id.substring(i);
+            }
+        }
+        socketServers.add(new Client(client_id, session));
+        logger.info(nowdate.nowDate() + "客户端:【{}】连接成功", client_id);
+
     }
 
 }

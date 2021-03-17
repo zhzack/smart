@@ -36,7 +36,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public Device query_deviceById(int deviceId) {
+    public List<Device> query_deviceById(int deviceId) {
 
         return deviceMapper.query_deviceById(deviceId);
     }

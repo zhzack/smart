@@ -6,8 +6,6 @@ import xyz.blue.mapper.UserMapper;
 import xyz.blue.pojo.User;
 import xyz.blue.service.UserService;
 
-import java.util.List;
-
 @Service("UserService")//别名
 //@Service
 public class UserServiceImpl implements UserService {
@@ -18,35 +16,40 @@ public class UserServiceImpl implements UserService {
         this.userMapper = userMapper;
     }
 
-
     @Override
-    public List<User> queryUserList() {
-        return userMapper.queryUserList();
+    public int deleteByPrimaryKey(Integer user_id) {
+        return userMapper.deleteByPrimaryKey(user_id);
     }
 
     @Override
-    public User queryUserByID(int id) {
-        return userMapper.queryUserByID(id);
+    public int insert(User record) {
+
+        return userMapper.insert(record);
     }
 
     @Override
-    public User queryUserByName(String name) {
-        return userMapper.queryUserByName(name);
+    public int insertSelective(User record) {
+        return userMapper.insertSelective(record);
     }
 
     @Override
-    public Object addUser(User user) {
-        return userMapper.addUser(user);
+    public User selectByPrimaryKey(Integer user_id) {
+        return userMapper.selectByPrimaryKey(user_id);
     }
 
     @Override
-    public int updateUser(User user) {
-        return userMapper.updateUser(user);
+    public User selectByName(String user_name) {
+        return userMapper.selectByName(user_name);
     }
 
     @Override
-    public int deleteUser(int id) {
-        return userMapper.deleteUser(id);
+    public int updateByPrimaryKeySelective(User record) {
+        return userMapper.updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public int updateByPrimaryKey(User record) {
+        return userMapper.updateByPrimaryKey(record);
     }
 }
 

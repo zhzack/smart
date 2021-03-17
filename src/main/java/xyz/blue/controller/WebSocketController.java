@@ -94,10 +94,10 @@ public class WebSocketController {
         //第二个参数为用户长连接传的用户人数
 
         String[] persons = client_id.split(",");
-        int[] clients_id = new int[persons.length];
+        String[] clients_id = new String[persons.length];
         for (int i = 0; i < persons.length; i++) {
-            clients_id[i] = Integer.parseInt(persons[i]);
-            userMsgService.insert_msg(new UserMsg(getUser().getUser_id(), clients_id[i], msg));
+            clients_id[i] = persons[i];
+//            userMsgService.insert_msg(new UserMsg(getUser().getUser_id(), clients_id[i], msg));
         }
 
         SocketServer.SendMany(msg, clients_id);
@@ -156,33 +156,33 @@ public class WebSocketController {
      * 这里的删除设备，并没有真正的把设备从表内删除，
      * 而是更改设备所属人。让当前登录账户不再拥有此设备
      * */
-    @RequestMapping("del_device")
-    @ResponseBody
-    public String del_device(int deviceId) {
-        int userId = getUser().getUser_id();
-        String s = "失败";
-        if (userId != 0) {
-            Device device = deviceService.query_deviceById(deviceId);
-            if (userId == device.getUser_id()) {
-
-                try {
-                    deviceService.update_deviceById(new Device(deviceId, 101101));
-                    s = "删除设备:" + deviceId + "成功";
-                    System.out.println(s);
-
-                } catch (Exception e) {
-                    s = "删除设备:" + deviceId + "失败";
-                    System.out.println(s);
-
-                }
-            } else {
-                s = "删除设备:" + deviceId + "失败，" + "当前用户没有此设备";
-                System.out.println(s);
-
-            }
-        }
-        return s;
-    }
+//    @RequestMapping("del_device")
+//    @ResponseBody
+//    public String del_device(int deviceId) {
+//        int userId = getUser().getUser_id();
+//        String s = "失败";
+//        if (userId != 0) {
+//            Device device = deviceService.query_deviceById(deviceId);
+//            if (userId == device.getUser_id()) {
+//
+//                try {
+//                    deviceService.update_deviceById(new Device(deviceId, 101101));
+//                    s = "删除设备:" + deviceId + "成功";
+//                    System.out.println(s);
+//
+//                } catch (Exception e) {
+//                    s = "删除设备:" + deviceId + "失败";
+//                    System.out.println(s);
+//
+//                }
+//            } else {
+//                s = "删除设备:" + deviceId + "失败，" + "当前用户没有此设备";
+//                System.out.println(s);
+//
+//            }
+//        }
+//        return s;
+//    }
 
     /*通过用户id查询发送的数据*/
     @GetMapping("/queryUserMsgByID")
@@ -229,35 +229,35 @@ public class WebSocketController {
         return User_id + "";
     }*/
 
-    @RequestMapping("DeviceSendMsg")
-    @ResponseBody
-    //DeviceId
-    public String devicesendmsg(int deviceId, String msg) {
-        int object = 0;
-
-        if (deviceId != 0) {
-
-            try {
-                object = deviceService.query_deviceById(deviceId).getUser_id();
-                try {
-                    DeviceMsg deviceMsg = new DeviceMsg(deviceId, object, msg);
-                    System.out.println(deviceMsg);
-                    deviceMsgService.insert_msg(deviceMsg);
-                } catch (NullPointerException e) {
-                    System.out.println(nowdate.nowDate() + "插入信息失败");
-                }
-            } catch (NullPointerException e) {
-                System.out.println(nowdate.nowDate() + "未注册设备登陆");
-            }
-            if (object == 0) {
-                return nowdate.nowDate() + "未绑定账户，请进入管理员页面添加";
-            } else {
-                return "" + object;
-            }
-        } else {
-            return "请输入设备id";
-        }
-    }
+//    @RequestMapping("DeviceSendMsg")
+//    @ResponseBody
+//    //DeviceId
+//    public String devicesendmsg(int deviceId, String msg) {
+//        int object = 0;
+//
+//        if (deviceId != 0) {
+//
+//            try {
+//                object = deviceService.query_deviceById(deviceId).getUser_id();
+//                try {
+//                    DeviceMsg deviceMsg = new DeviceMsg(deviceId, object, msg);
+//                    System.out.println(deviceMsg);
+//                    deviceMsgService.insert_msg(deviceMsg);
+//                } catch (NullPointerException e) {
+//                    System.out.println(nowdate.nowDate() + "插入信息失败");
+//                }
+//            } catch (NullPointerException e) {
+//                System.out.println(nowdate.nowDate() + "未注册设备登陆");
+//            }
+//            if (object == 0) {
+//                return nowdate.nowDate() + "未绑定账户，请进入管理员页面添加";
+//            } else {
+//                return "" + object;
+//            }
+//        } else {
+//            return "请输入设备id";
+//        }
+//    }
 
     @RequestMapping("smart")
     public String smart() {
@@ -278,9 +278,9 @@ public class WebSocketController {
         }
         Integer[] onLineDeviceS = onLineDevice.toArray(new Integer[0]);
 
-        int[] clients_id = new int[onLineDeviceS.length];
+        String[] clients_id = new String[onLineDeviceS.length];
         for (int i = 0; i < onLineDeviceS.length; i++) {
-            clients_id[i] = onLineDeviceS[i];
+            clients_id[i] = String.valueOf(onLineDeviceS[i]);
         }
 
         SocketServer.SendMany(msg, clients_id);
@@ -292,7 +292,7 @@ public class WebSocketController {
         try {
             return (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
         } catch (NullPointerException e) {
-            return new User(0, "体验用户", "123");
+            return new User("体验用户", "123");
         }
     }
 
