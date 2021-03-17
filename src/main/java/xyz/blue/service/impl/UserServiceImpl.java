@@ -6,15 +6,17 @@ import xyz.blue.mapper.UserMapper;
 import xyz.blue.pojo.User;
 import xyz.blue.service.UserService;
 
-@Service("UserService")//别名
 //@Service
+@Service("UserService")//别名
 public class UserServiceImpl implements UserService {
 
-    private final UserMapper userMapper;
+    final
+    UserMapper userMapper;
 
     public UserServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
+
 
     @Override
     public int deleteByPrimaryKey(Integer user_id) {

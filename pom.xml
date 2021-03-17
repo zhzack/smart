@@ -12,7 +12,7 @@
     <artifactId>blue</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>blue</name>
-    <description>Demo project for Spring Boot</description>
+    <description>SmartHome project for Spring Boot</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -33,11 +33,13 @@
             <artifactId>thymeleaf-extras-shiro</artifactId>
             <version>2.0.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.1.2</version>
+            <version>2.1.4</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>

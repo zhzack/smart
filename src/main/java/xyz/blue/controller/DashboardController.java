@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import xyz.blue.pojo.Device;
 import xyz.blue.pojo.User;
 import xyz.blue.server.SocketServer;
-import xyz.blue.service.DeviceMsgService;
 import xyz.blue.service.impl.DeviceServiceImpl;
 import xyz.blue.service.impl.UserServiceImpl;
 
@@ -30,8 +29,6 @@ public class DashboardController {
     UserServiceImpl userService;
     @Autowired
     DeviceServiceImpl deviceService;
-    @Autowired
-    DeviceMsgService deviceMsgService;
 
 
     @GetMapping("/noach")

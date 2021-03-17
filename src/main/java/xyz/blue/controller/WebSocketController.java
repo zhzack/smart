@@ -2,18 +2,12 @@ package xyz.blue.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.shiro.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import xyz.blue.pojo.Device;
-import xyz.blue.pojo.DeviceMsg;
 import xyz.blue.pojo.User;
-import xyz.blue.pojo.UserMsg;
 import xyz.blue.server.SocketServer;
-import xyz.blue.service.DeviceMsgService;
-import xyz.blue.service.UserMsgService;
 import xyz.blue.service.impl.DeviceServiceImpl;
 import xyz.blue.service.impl.UserServiceImpl;
 import xyz.blue.tools.NowDate;
@@ -30,18 +24,17 @@ import java.util.Objects;
 @Controller
 public class WebSocketController {
 
-    @Autowired
-    private SocketServer socketServer;
-    @Autowired
+    final
     UserServiceImpl userService;
-    @Autowired
+    final
     DeviceServiceImpl deviceService;
-    @Autowired
-    DeviceMsgService deviceMsgService;
-    @Autowired
-    UserMsgService userMsgService;
 
     NowDate nowdate = new NowDate();
+
+    public WebSocketController(DeviceServiceImpl deviceService, SocketServer socketServer, UserServiceImpl userService) {
+        this.deviceService = deviceService;
+        this.userService = userService;
+    }
 
     /**
      * 客户端页面
@@ -184,22 +177,6 @@ public class WebSocketController {
 //        return s;
 //    }
 
-    /*通过用户id查询发送的数据*/
-    @GetMapping("/queryUserMsgByID")
-    @ResponseBody
-    public List<UserMsg> queryUserMsgByID() {
-//        userMsgService.insert_msg(new UserMsg(101878, 4, "55"));
-        return userMsgService.queryUserMsgByID(getUser().getUser_id());
-
-    }
-
-    /*通过查询device_msg表中的to_user_id查询*/
-    @GetMapping("/queryDeviceMsgByID")
-    @ResponseBody
-    public List<DeviceMsg> queryDeviceMsgByID() {
-//        deviceMsgService.insert_msg(new DeviceMsg(4, 101878, "58545"));
-        return deviceMsgService.queryDeviceMsgByID(getUser().getUser_id());
-    }
 
     @RequestMapping("UserSandMsg")
     @ResponseBody
