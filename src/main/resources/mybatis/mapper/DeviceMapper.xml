@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xyz.blue.mapper.DeviceMapper">
     <insert id="insert_device">
-        insert into device(device_name, user_id,device_mac)
-        values (#{device_name}, #{user_id},#{device_mac})
+        insert into device(device_name, user_id, device_mac)
+        values (#{device_name}, #{user_id}, #{device_mac})
     </insert>
 
 
@@ -17,6 +17,12 @@
     <update id="update_deviceById">
         update device
         set user_id=#{user_id}
+        where device_id = #{device_id}
+    </update>
+
+    <update id="update_device_statusById">
+        update device
+        set device_status=#{status}
         where device_id = #{device_id}
     </update>
 

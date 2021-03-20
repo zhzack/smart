@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import xyz.blue.pojo.Client;
 import xyz.blue.pojo.User;
 import xyz.blue.server.messageTool.OnMessageTool;
+import xyz.blue.server.messageTool.OpenTool;
 import xyz.blue.server.messageTool.StatusConstant;
 import xyz.blue.service.impl.DeviceServiceImpl;
 import xyz.blue.service.impl.UserServiceImpl;
@@ -19,7 +20,6 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
@@ -54,34 +54,7 @@ public class SocketServer implements StatusConstant {
 //     * 要想完成ui界面聊天的功能，服务端也需要作为客户端来接收后台推送用户发送的信息
 //     */
 
-    /**
-     * 用户连接时触发，我们将其添加到
-     * 保存客户端连接信息的socketServers中
-     * <p>
-     * session
-     * userName
-     */
-    @OnOpen
-    public void open(Session session, @PathParam(value = "userName") String client_id) {
 
-        this.session = session;
-        boolean noDevice = true;
-        for (Client client : socketServers) {
-            if (Objects.equals(client.getClient_id(), client_id)) {
-                noDevice = false;
-                onClose();
-                break;
-            }
-        }
-        if (noDevice) {
-            socketServers.add(new Client(client_id, session));
-
-            logger.info(nowdate.nowDate() + "客户端:【{}】连接成功", client_id);
-
-        }
-
-
-    }
 
     public synchronized static void sendAll() {
         if (!socketServers.isEmpty()) {
@@ -250,35 +223,33 @@ public class SocketServer implements StatusConstant {
 
     }
 
-//    /**
-//     * 用户连接时触发，我们将其添加到
-//     * 保存客户端连接信息的socketServers中
-//     * <p>
-//     * session
-//     * userName
-//     */
-//    @OnOpen
-//    public void open(Session session, @PathParam(value = "userName") String client_id) {
-//
-//        this.session = session;
-///*
-//        检测是否已经使用此id连接，这里使用多用户同时连接，故注释
-//        for (Client client : socketServers) {
-//            if (Objects.equals(client.getClient_id(), client_id)) {
-//                noDevice = false;
-//                onClose();
-//                break;
-//            }
-//        }
-//*/
-//        for (int i = 0; i < client_id.length(); i++) {
-//            if (!String.valueOf(client_id.charAt(i)).equals("0")) {
-//                client_id = client_id.substring(i);
-//            }
-//        }
-//        socketServers.add(new Client(client_id, session));
-//        logger.info(nowdate.nowDate() + "客户端:【{}】连接成功", client_id);
-//
-//    }
+    /**
+     * 用户连接时触发，我们将其添加到
+     * 保存客户端连接信息的socketServers中
+     * <p>
+     * session
+     * userName
+     */
+    @OnOpen
+    public void open(Session session, @PathParam(value = "userName") String client_id) {
+
+        this.session = session;
+/*
+        检测是否已经使用此id连接，这里使用多用户同时连接，故注释
+        for (Client client : socketServers) {
+            if (Objects.equals(client.getClient_id(), client_id)) {
+                noDevice = false;
+                onClose();
+                break;
+            }
+        }
+*/
+        Client client = new Client(client_id, session);
+        OpenTool openTool = new OpenTool();
+        openTool.onopen(client);
+        socketServers.add(client);
+        logger.info(nowdate.nowDate() + "客户端:【{}】连接成功[{}]", client.getClient_id(), client.getIdentity());
+
+    }
 
 }

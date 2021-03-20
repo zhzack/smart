@@ -248,7 +248,7 @@ public class WebSocketController {
     @ResponseBody
     public String sendAll(String msg) {
 
-        List<Integer> onLineDevice = new ArrayList<>();
+        List<String> onLineDevice = new ArrayList<>();
 
         for (Device deviceOnLine : getDeviceOnLines(getDevice(getUser().getUser_id()))) {
             onLineDevice.add(deviceOnLine.getDevice_id());

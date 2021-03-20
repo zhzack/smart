@@ -27,5 +27,6 @@ public interface DeviceService {
     //更新设备信息
     void update_deviceById(Device device);
 
+    void update_device_statusById(Device device);
 
 }

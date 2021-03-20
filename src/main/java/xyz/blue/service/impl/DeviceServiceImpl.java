@@ -14,13 +14,11 @@ public class DeviceServiceImpl implements DeviceService {
     private final DeviceMapper deviceMapper;
 
     public DeviceServiceImpl(DeviceMapper deviceMapper) {
-
         this.deviceMapper = deviceMapper;
     }
 
     @Override
     public List<Device> queryDeviceListByUserID(int user_id) {
-
         return deviceMapper.queryDeviceListByUserID(user_id);
     }
 
@@ -37,7 +35,6 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public List<Device> query_deviceById(int deviceId) {
-
         return deviceMapper.query_deviceById(deviceId);
     }
 
@@ -52,8 +49,12 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<Device> queryDeviceList() {
+    public void update_device_statusById(Device device) {
+        deviceMapper.update_device_statusById(device);
+    }
 
+    @Override
+    public List<Device> queryDeviceList() {
         return deviceMapper.queryDeviceList();
     }
 }
