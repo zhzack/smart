@@ -21,14 +21,15 @@ public class Client implements Serializable {
 
 
     public Client(String client_id, Session session) {
+
         if (String.valueOf(client_id.charAt(0)).equals("U")) {
             this.client_id = client_id.substring(1);
-            this.DeviceList.addAll(deviceService.queryDeviceListByUserID(Integer.parseInt(this.client_id)));
+//            this.DeviceList.addAll(deviceService.queryDeviceListByUserID(Integer.parseInt(this.client_id)));
         } else {
             this.client_id = client_id;
-            this.DeviceList.addAll(deviceService.query_deviceById(Integer.parseInt(client_id)));
+//            this.DeviceList.addAll(deviceService.query_deviceById(Integer.parseInt(client_id)));
         }
-
+        System.out.println(this.client_id);
         this.session = session;
     }
 
