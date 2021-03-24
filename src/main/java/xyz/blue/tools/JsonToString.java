@@ -1,7 +1,12 @@
 package xyz.blue.tools;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import xyz.blue.pojo.Device;
+
+import java.util.List;
 
 public class JsonToString {
 
@@ -30,12 +35,35 @@ public class JsonToString {
 //    }
 
     public static String DeviceMsg(String msg) {
-
-
         JSONObject obj = JSON.parseObject(msg);
-
         return null;
-
-
     }
+
+    public static String DeviceListToJson(List<Device> deviceList) throws JSONException {
+
+
+        String jsonStr = JSONObject.toJSONString( deviceList );
+        return jsonStr;
+
+//        if (deviceList == null) return "";
+//        JSONArray array = new JSONArray();
+//        JSONObject jsonObject = new JSONObject();
+//
+//        deviceList.forEach(device -> {
+//            jsonObject.clear();
+//            jsonObject.put("Device_id",device.getDevice_id());
+//            jsonObject
+//        });
+//
+//        GoodInfo info = null;
+//        for (int i = 0; i < items.size(); i++) {
+//            info = items.get(i);
+//            jsonObject = ;
+//            jsonObject.put(Api.COLORID, info.getColorId());
+//            jsonObject.put(Api.STOCK, info.getStock());
+//            array.put(jsonObject);
+//        }
+//        return array.toString();
+    }
+
 }

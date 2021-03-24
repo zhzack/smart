@@ -29,12 +29,17 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public void insert_Device(Device device) {
+        deviceMapper.insert_Device(device);
+    }
+
+    @Override
     public void insert_deviceLog(Device device) {
         deviceMapper.insert_deviceLog(device);
     }
 
     @Override
-    public List<Device> query_deviceById(int deviceId) {
+    public Device query_deviceById(int deviceId) {
         return deviceMapper.query_deviceById(deviceId);
     }
 

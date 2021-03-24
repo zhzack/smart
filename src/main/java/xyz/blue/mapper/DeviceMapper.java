@@ -19,12 +19,15 @@ public interface DeviceMapper {
     //加入设备
     void insert_device(Device device);
 
+    //加入设备,设备自联结时添加
+    void insert_Device(Device device);
+
     //日志记录
     void insert_deviceLog(Device device);
 
 
     //通过设备id查找设备
-    List<Device> query_deviceById(int deviceId);
+    Device query_deviceById(int deviceId);
 
     //删除设备
     void del_deviceById(int deviceId);
@@ -32,6 +35,7 @@ public interface DeviceMapper {
     //    更新设备信息
     void update_deviceById(Device device);
 
+    //通过设备id更新设备状态
     void update_device_statusById(Device device);
 
 
