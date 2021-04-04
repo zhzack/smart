@@ -88,7 +88,8 @@ public class OnMessageTool implements StatusConstant {
         ) {
             case DEVICELIST:
 
-                SocketServer.sendMessage(JSONObject.toJSONString(client.getDeviceList()), client.getClient_id());
+                SocketServer.sendMessage("01"+JSONObject.toJSONString(client.getDeviceList()), client.getClient_id());
+                logger.info(JSONObject.toJSONString(client.getDeviceList()));
                 logger.info("请求设备列表");
                 break;
             default:

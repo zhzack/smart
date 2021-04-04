@@ -21,6 +21,7 @@
     <script th:src="@{../jquery.min.js}"></script>
     <!-- plugins:js -->
     <script th:src="@{../vendors/base/vendor.bundle.base.js}"></script>
+    <script th:src="@{../dist/echart.js}"></script>
     <!-- endinject -->
     <!-- Plugin js for this page-->
     <script th:src="@{../vendors/chart.js/Chart.min.js}"></script>
@@ -53,7 +54,7 @@
                     <div class="col-md-12 grid-margin">
                         <div class="d-flex justify-content-between flex-wrap">
                             <div class="d-flex align-items-end flex-wrap">
-                                <div class="mr-md-3 mr-xl-5">
+                                <div class="mr-md-3 mr-xl-5" id="main">
                                     <h2>Welcome back</h2>
                                 </div>
 
@@ -69,7 +70,29 @@
                     </div>
 
                     <div class="col" id="OnLineDevices">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">设备列表</h4>
+                                <p class="card-description">
+                                    您的所有已连接网络的设备
+                                </p>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>device_id</th>
+                                            <th>device_mac</th>
+                                            <th>device_name</th>
+                                            <th>device_status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="OnlineDeviceList">
 
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -77,7 +100,32 @@
                         全部设备
                     </div>
                     <div class="card-body" id="AllDevices">
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">设备列表</h4>
+                                <p class="card-description">
+                                    您的所有设备
+                                </p>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>device_id</th>
+                                            <th>device_mac</th>
+                                            <th>device_name</th>
+                                            <th>device_status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="AllDeviceList">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -87,8 +135,20 @@
 </div>
 
 <script type="text/javascript">
+
+
     // parameter_device()
     let ws = null;
+    let onLineDevices = document.getElementById("device-online");
+    let Devices = document.getElementById("device-all");
+    let AllDeviceMenu = document.getElementById("AllDeviceMenu");
+    let AllDeviceList = document.getElementById("AllDeviceList");
+    let onLine_sum = document.getElementById("onLine_sum");
+    let OnLineDevices = document.getElementById("OnLineDevices");
+    let AllDevices = document.getElementById("AllDevices");
+    let device_name = document.getElementById("device_name").value;
+    let device_mac = document.getElementById("device_mac").value;
+    let OnlineDeviceList = document.getElementById("OnlineDeviceList");
     connect()
     devices()
 
@@ -99,10 +159,29 @@
         ws = new Socket("ws://127.0.0.1/ws/U" + user_name);
 
         ws.onmessage = function (evt) {
-            if (evt.data === "00") {
-                console.log("心跳")
-            } else {
-                console.log(JSON.parse(evt.data)+"qwe")
+            let infoCode = evt.data.substring(0, 2)
+            let message = evt.data.substring(2)
+            switch (infoCode) {
+                case "00":
+                    console.log("心跳")
+                    break;
+                case "01":
+                    let arr = JSON.parse(message);
+                    for (let i = 0; i < arr.length; i++) {
+                        insertDevice(arr[i])
+                    }
+                    break;
+                case "02":
+                    break;
+                case "03":
+                    break;
+                case "04":
+                    break;
+                case "05":
+                    break;
+                default :
+                    console.log(evt.data)
+                    break;
             }
         };
 
@@ -116,31 +195,69 @@
         };
     }
 
+    function insertDevice(device) {
+        // Object.keys(device).forEach(function(key){
+        //
+        //     console.log(key,device[key]);
+        // });
+        let AllDevice_Menu = "<li id='AllDeviceMenuItem-" + device.device_id + "'>";
+        let AllDevice_List = "<tr id='AllDeviceList-" + device.device_id + "'>"
+        let OnlineDevice_List = "<tr id='OnlineDeviceList-" + device.device_id + "'>"
+        Object.keys(device).forEach(function (key) {
+
+            AllDevice_Menu += "<td>" + device[key] + "</td>"
+            AllDevice_List += "<td>" + device[key] + "</td>"
+            console.log(key, device[key]);
+        });
+        AllDevice_Menu += "<td><button type=\"button\" class=\"btn btn-warning btn-icon-text\">\n" +
+            "                          <i class=\"mdi mdi-reload btn-icon-prepend\"></i>                                                    \n" +
+            "                          Reset\n" +
+            "                        </button></td></li>"
+        AllDevice_List += "<td><button type=\"button\" class=\"btn btn-warning btn-icon-text\" id =device.device_id  onclick=openLed(this.getAttribute('class'),this.getAttribute(device_id))>\n" +
+            "                          <i class=\"mdi mdi-reload btn-icon-prepend\"></i>                                                    \n" +
+            "                          Reset\n" +
+            "                        </button></td>";
+        AllDeviceMenu.innerHTML += AllDevice_Menu + "</li>"
+        AllDeviceList.innerHTML += AllDevice_List + "</tr>";
+        Devices.innerHTML = Devices.innerHTML + AllDeviceMenu;
+        if (device.device_status) {
+
+            Object.keys(device).forEach(function (key) {
+                OnlineDevice_List += "<td>" + device[key] + "</td>"
+
+            });
+            OnlineDeviceList.innerHTML += OnlineDevice_List;
+            onLineDevices.innerHTML = onLineDevices.innerHTML + device.device_id + "<br>";
+
+        }
+
+
+    }
+
+    function openLed(data,data1) {
+        console.log(data)
+        console.log(data1)
+    }
+
     function devices() {
-        let onLineDevices = document.getElementById("device-online");
-        let Devices = document.getElementById("device-all");
-        let onLine_sum = document.getElementById("onLine_sum");
-        let OnLineDevices = document.getElementById("OnLineDevices");
-        let AllDevices = document.getElementById("AllDevices");
-        $.ajax({
-                method: 'post',
-                url: '/device/selectByUserId',
-                data: 'user_id=[[${session.loginUser.user_id}]]',
-                dataType: "json",
-                success: function (data) {
-                    Devices.innerHTML = "";
-                    onLineDevices.innerHTML = "";
-                    AllDevices.innerHTML = "";
-                    OnLineDevices.innerHTML = "";
-                }
-            }
-        )
+
+        // $.ajax({
+        //         method: 'post',
+        //         url: '/device/selectByUserId',
+        //         data: 'user_id=[[${session.loginUser.user_id}]]',
+        //         dataType: "json",
+        //         success: function (data) {
+        //             Devices.innerHTML = "";
+        //             onLineDevices.innerHTML = "";
+        //             AllDevices.innerHTML = "";
+        //             OnLineDevices.innerHTML = "";
+        //         }
+        //     }
+        // )
 
     }
 
     function addDevice() {
-        let device_name = document.getElementById("device_name").value;
-        let device_mac = document.getElementById("device_mac").value;
         if (device_mac !== "" && device_name !== "") {
             $.ajax({
                 method: 'get',

@@ -12,7 +12,7 @@ public class Device {
 
     private String device_name;
     private Integer user_id;
-    private boolean status;
+    private boolean device_status;
     private String device_mac;
 
     public Device() {
@@ -27,9 +27,9 @@ public class Device {
         this.user_id = user_id;
     }
 
-    public Device(String device_id, boolean status) {
+    public Device(String device_id, boolean device_status) {
         this.device_id = device_id;
-        this.status = status;
+        this.device_status = device_status;
     }
 
     public Device(String device_id, String device_name) {
@@ -37,24 +37,24 @@ public class Device {
         this.device_name = device_name;
     }
 
-    public Device(String device_id, String device_name, Integer user_id, boolean status) {
+    public Device(String device_id, String device_name, Integer user_id, boolean device_status) {
         this.device_id = device_id;
         this.device_name = device_name;
         this.user_id = user_id;
-        this.status = status;
+        this.device_status = device_status;
     }
 
-    public Device(String device_name, Integer user_id, boolean status) {
+    public Device(String device_name, Integer user_id, boolean device_status) {
         this.device_name = device_name;
         this.user_id = user_id;
-        this.status = status;
+        this.device_status = device_status;
     }
 
-    public Device(String device_id, String device_name, Integer user_id, boolean status, String device_mac) {
+    public Device(String device_id, String device_name, Integer user_id, boolean device_status, String device_mac) {
         this.device_id = device_id;
         this.device_name = device_name;
         this.user_id = user_id;
-        this.status = status;
+        this.device_status = device_status;
         this.device_mac = device_mac;
     }
 
@@ -64,10 +64,10 @@ public class Device {
         this.device_mac = device_mac;
     }
 
-    public Device(int device_mac, int user_id, boolean status) {
+    public Device(int device_mac, int user_id, boolean device_status) {
         this.device_mac = String.valueOf(device_mac);
         this.user_id = user_id;
-        this.status = status;
+        this.device_status = device_status;
 
     }
 
@@ -95,12 +95,12 @@ public class Device {
         this.user_id = user_id;
     }
 
-    public boolean getStatus() {
-        return status;
+    public boolean getDevice_status() {
+        return device_status;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setDevice_status(boolean device_status) {
+        this.device_status = device_status;
     }
 
     @Override

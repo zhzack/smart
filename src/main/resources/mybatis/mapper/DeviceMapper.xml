@@ -3,6 +3,13 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xyz.blue.mapper.DeviceMapper">
+<!--    <resultMap id="BaseResultMap" type="xyz.blue.pojo.Device">-->
+<!--        <id column="device_id" jdbcType="INTEGER" property="device_id" />-->
+<!--        <result column="device_name" jdbcType="CHAR" property="device_name" />-->
+<!--        <result column="user_id" jdbcType="INTEGER" property="user_id" />-->
+<!--        <result column="device_mac" jdbcType="INTEGER" property="device_status" />-->
+<!--        <result column="device_status" jdbcType="BOOLEAN" property="device_mac" />-->
+<!--    </resultMap>-->
     <insert id="insert_device">
         insert into device(device_name, user_id, device_mac)
         values (#{device_name}, #{user_id}, #{device_mac})
@@ -16,7 +23,7 @@
 
     <insert id="insert_deviceLog">
         insert into device(device_status, device_mac,device_id)
-        values (#{status}, #{device_id},#{device_id})
+        values (#{device_status}, #{device_id},#{device_id})
     </insert>
 
     <update id="update_deviceById">
@@ -27,7 +34,7 @@
 
     <update id="update_device_statusById">
         update device
-        set device_status=#{status}
+        set device_status=#{device_status}
         where device_id = #{device_id}
     </update>
 
@@ -40,7 +47,7 @@
 
 
     <select id="queryDeviceListByUserID" parameterType="int" resultType="xyz.blue.pojo.Device">
-        select *
+        select device_id, device_name, user_id, device_mac, device_status
         from device
         where user_id = #{user_id}
     </select>
@@ -53,7 +60,7 @@
 
 
     <select id="query_deviceById" resultType="xyz.blue.pojo.Device">
-        select *
+        select device_id,device_name,user_id,device_mac,device_status
         from device
         where device_id = #{deviceId}
     </select>

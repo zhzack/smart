@@ -33,7 +33,7 @@ public class onCloseTool implements StatusConstant {
                if (client1.getClient_id().equals(String.valueOf(client.getDevice().getUser_id()))){
                    client1.getDeviceList().forEach(device1 -> {
                        if (device1.getDevice_id().equals(client.getClient_id())){
-                           device1.setStatus(false);
+                           device1.setDevice_status(false);
                        }
                    });
                }

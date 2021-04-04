@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generate.DeviceDao">
+  <resultMap id="BaseResultMap" type="generate.Device">
+    <id column="device_id" jdbcType="INTEGER" property="deviceId" />
+    <result column="device_name" jdbcType="CHAR" property="deviceName" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="device_mac" jdbcType="INTEGER" property="deviceMac" />
+    <result column="device_status" jdbcType="BOOLEAN" property="deviceStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    device_id, device_name, user_id, device_mac, device_status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from device
+    where device_id = #{deviceId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from device
+    where device_id = #{deviceId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="device_id" keyProperty="deviceId" parameterType="generate.Device" useGeneratedKeys="true">
+    insert into device (device_name, user_id, device_mac, 
+      device_status)
+    values (#{deviceName,jdbcType=CHAR}, #{userId,jdbcType=INTEGER}, #{deviceMac,jdbcType=INTEGER}, 
+      #{deviceStatus,jdbcType=BOOLEAN})
+  </insert>
+  <insert id="insertSelective" keyColumn="device_id" keyProperty="deviceId" parameterType="generate.Device" useGeneratedKeys="true">
+    insert into device
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceName != null">
+        device_name,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="deviceMac != null">
+        device_mac,
+      </if>
+      <if test="deviceStatus != null">
+        device_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deviceName != null">
+        #{deviceName,jdbcType=CHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="deviceMac != null">
+        #{deviceMac,jdbcType=INTEGER},
+      </if>
+      <if test="deviceStatus != null">
+        #{deviceStatus,jdbcType=BOOLEAN},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="generate.Device">
+    update device
+    <set>
+      <if test="deviceName != null">
+        device_name = #{deviceName,jdbcType=CHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="deviceMac != null">
+        device_mac = #{deviceMac,jdbcType=INTEGER},
+      </if>
+      <if test="deviceStatus != null">
+        device_status = #{deviceStatus,jdbcType=BOOLEAN},
+      </if>
+    </set>
+    where device_id = #{deviceId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="generate.Device">
+    update device
+    set device_name = #{deviceName,jdbcType=CHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      device_mac = #{deviceMac,jdbcType=INTEGER},
+      device_status = #{deviceStatus,jdbcType=BOOLEAN}
+    where device_id = #{deviceId,jdbcType=INTEGER}
+  </update>
+</mapper>

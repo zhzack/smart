@@ -40,7 +40,9 @@ public interface StatusConstant {
 
     //    请求
     String REQUEST = "01";
+
     String DEVICELIST="00";
+
 
 
     //    回应
