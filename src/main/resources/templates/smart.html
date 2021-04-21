@@ -21,7 +21,8 @@
     <script th:src="@{../jquery.min.js}"></script>
     <!-- plugins:js -->
     <script th:src="@{../vendors/base/vendor.bundle.base.js}"></script>
-    <script th:src="@{../dist/echart.js}"></script>
+    <!--    <script th:src="@{../dist/echart.js}"></script>-->
+    <script th:src="@{../dist/echarts.js}"></script>
     <!-- endinject -->
     <!-- Plugin js for this page-->
     <script th:src="@{../vendors/chart.js/Chart.min.js}"></script>
@@ -57,15 +58,31 @@
                                 <div class="mr-md-3 mr-xl-5" id="main">
                                     <h2>Welcome back</h2>
                                 </div>
-
-
                             </div>
                         </div>
 
                     </div>
                 </div>
                 <div class="row">
-                    <div class="card-header">
+                    <div class="card-header col-1">
+                        温湿度折线图
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">各设备检测到的温度</h4>
+                                <p class="card-description">
+                                    您的所有已连接网络的设备
+                                </p>
+                                <div id="temperatureHumidityEChart" style="width: 100%;height:400%;"></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card-header col-1">
                         在线设备
                     </div>
 
@@ -96,13 +113,14 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="card-header">
+
+                    <div class="card-header col-1">
                         全部设备
                     </div>
-                    <div class="card-body" id="AllDevices">
+                    <div class="col">
 
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-body" id="AllDevices">
                                 <h4 class="card-title">设备列表</h4>
                                 <p class="card-description">
                                     您的所有设备
@@ -129,7 +147,6 @@
                 </div>
             </div>
         </div>
-        <div class="card-body"></div>
     </div>
 
 </div>
@@ -149,8 +166,42 @@
     let device_name = document.getElementById("device_name").value;
     let device_mac = document.getElementById("device_mac").value;
     let OnlineDeviceList = document.getElementById("OnlineDeviceList");
+    const chartDom = document.getElementById('temperatureHumidityEChart');
+    const myChart = echarts.init(chartDom);
+    let temperature_humidity = {
+
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: []
+            //    折现标签
+        },
+        grid: {
+            left: '2%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: []
+            //    横坐标
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: []
+    };
+
     connect()
-    devices()
+    TEMPERATURE_HUMIDITY()
 
     function connect() {
         const user_name = [[${session.loginUser.user_id}]];
@@ -159,21 +210,23 @@
         ws = new Socket("ws://127.0.0.1/ws/U" + user_name);
 
         ws.onmessage = function (evt) {
-            let infoCode = evt.data.substring(0, 2)
-            let message = evt.data.substring(2)
+            console.log(evt.data);
+            let data=JSON.parse(evt.data)
+            console.log(data);
+            let infoCode = data.info
+
             switch (infoCode) {
-                case "00":
+                case "03":
                     console.log("心跳")
                     break;
                 case "01":
-                    let arr = JSON.parse(message);
+                    let arr = data.deviceList
                     for (let i = 0; i < arr.length; i++) {
                         insertDevice(arr[i])
                     }
                     break;
                 case "02":
-                    break;
-                case "03":
+                    add_temperature_humidity_value(data.temperatureHumidityCode,data.data,data.device_id)
                     break;
                 case "04":
                     break;
@@ -186,13 +239,68 @@
         };
 
         ws.onclose = function (evt) {
+            connect()
             console.log('连接关闭')
         };
 
         ws.onopen = function (evt) {
             ws.send("0100")
+            setInterval("ws.send('03')",1000);
             console.log('连接成功')
         };
+    }
+
+    function add_temperature_humidity_value(info,data, id) {
+        console.log(info)
+        console.log(id)
+        console.log(data)
+
+        if (info + "" === "03") {
+            temperature_humidity.series.forEach(
+                function (blue, index) {
+                    if (id + "湿度" === blue.name) {
+                        blue.data.push(data)
+
+                    }
+
+                });
+
+        } else if (info + "" === "02") {
+            temperature_humidity.series.forEach(
+                function (blue, index) {
+                    if (id + "温度" === blue.name) {
+                        blue.data.push(data)
+                        if(temperature_humidity.xAxis.data.length<=blue.data.length){
+                            temperature_humidity.xAxis.data.push(new Date());
+                        }
+                    }
+
+                });
+        }
+
+
+        temperature_humidity && myChart.setOption(temperature_humidity);
+    }
+
+    function add_temperature_humidity(data) {
+        let object = {
+            name: data + "湿度",
+            type: 'line',
+            stack: '总量',
+            data: []
+        }
+        temperature_humidity.series.push(object);
+        let object1 = {
+            name: data + "温度",
+            type: 'line',
+            stack: '总量',
+            data: []
+        }
+        temperature_humidity.series.push(object1);
+
+        temperature_humidity.legend.data.push(data + "湿度")
+        temperature_humidity.legend.data.push(data + "温度")
+        temperature_humidity && myChart.setOption(temperature_humidity);
     }
 
     function insertDevice(device) {
@@ -206,14 +314,15 @@
         Object.keys(device).forEach(function (key) {
 
             AllDevice_Menu += "<td>" + device[key] + "</td>"
-            AllDevice_List += "<td>" + device[key] + "</td>"
+            AllDevice_List += "<td><label class=\"badge badge-danger\">" + device[key] + "</label></td>"
+
             console.log(key, device[key]);
         });
         AllDevice_Menu += "<td><button type=\"button\" class=\"btn btn-warning btn-icon-text\">\n" +
             "                          <i class=\"mdi mdi-reload btn-icon-prepend\"></i>                                                    \n" +
             "                          Reset\n" +
             "                        </button></td></li>"
-        AllDevice_List += "<td><button type=\"button\" class=\"btn btn-warning btn-icon-text\" id =device.device_id  onclick=openLed(this.getAttribute('class'),this.getAttribute(device_id))>\n" +
+        AllDevice_List += "<td><button type=\"button\" class=\"btn btn-warning btn-icon-text\" user_id='" + device.user_id + "' device_id =" + device.device_id + "  onclick=openLed(this.getAttribute('class'),this.getAttribute('device_id'),this.getAttribute('user_id'))>\n" +
             "                          <i class=\"mdi mdi-reload btn-icon-prepend\"></i>                                                    \n" +
             "                          Reset\n" +
             "                        </button></td>";
@@ -221,7 +330,7 @@
         AllDeviceList.innerHTML += AllDevice_List + "</tr>";
         Devices.innerHTML = Devices.innerHTML + AllDeviceMenu;
         if (device.device_status) {
-
+            add_temperature_humidity(device.device_id)
             Object.keys(device).forEach(function (key) {
                 OnlineDevice_List += "<td>" + device[key] + "</td>"
 
@@ -234,9 +343,14 @@
 
     }
 
-    function openLed(data,data1) {
-        console.log(data)
-        console.log(data1)
+    function openLed(data, device_id, user_id) {
+        while (device_id.length < 8) {
+            device_id = "0" + device_id;
+        }
+        while (user_id.length < 8) {
+            user_id = "0" + user_id
+        }
+        ws.send("003" + user_id + device_id + "LedOn")
     }
 
     function devices() {
@@ -287,6 +401,10 @@
 
     }
 
+
+    function TEMPERATURE_HUMIDITY(data) {
+        temperature_humidity && myChart.setOption(temperature_humidity);
+    }
 </script>
 
 </body>

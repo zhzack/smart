@@ -9,6 +9,10 @@ public interface StatusConstant {
     int BEGINREQUESTCODE = ENDINFOCODE;
     int ENDREQUESTCODE = BEGINREQUESTCODE + 2;
 
+    //    响应码开始位置
+    int BEGINRESPONDCODE = ENDINFOCODE;
+    int ENDRESPONDCODE = BEGINRESPONDCODE + 2;
+
     //    消息
     String MESSAGE = "00";
     //身份校验位，验证用户还是设备
@@ -41,12 +45,16 @@ public interface StatusConstant {
     //    请求
     String REQUEST = "01";
 
-    String DEVICELIST="00";
+    String DEVICELIST = "00";
+    String USERID = "01";
+    String TEMPERATURE = "02";
+    String HUMIDITY = "03";
 
 
-
-    //    回应
+    //    响应
     String RESPOND = "02";
+
+
     //    心跳
     String CONTEST = "03";
 

@@ -1,5 +1,6 @@
 package xyz.blue.server;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
@@ -45,11 +46,13 @@ public class SocketServer implements StatusConstant {
     private boolean isAutowired = false;
 
     public synchronized static void sendAll() {
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("info","03");
         if (!socketServers.isEmpty()) {
             //群发，不能发送给服务端自己
             socketServers.forEach(client -> {
                 try {
-                    client.getSession().getBasicRemote().sendText("00");
+                    client.getSession().getBasicRemote().sendText(String.valueOf(jsonObject));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
