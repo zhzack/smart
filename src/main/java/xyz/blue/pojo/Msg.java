@@ -155,4 +155,56 @@ public class Msg implements Serializable, StatusConstant {
         }
         return msg + "<发送者id>" + msg_sent_id + "<接收者id>" + msg_receive_id + "<信息内容:>" + msg_text;
     }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getMsg_id() {
+        return msg_id;
+    }
+
+    public void setMsg_id(Integer msg_id) {
+        this.msg_id = msg_id;
+    }
+
+    public String getMsg_infoCode() {
+        return msg_infoCode;
+    }
+
+    public void setMsg_infoCode(String msg_infoCode) {
+        this.msg_infoCode = msg_infoCode;
+    }
+
+    public String getMsg_identityCode() {
+        return msg_identityCode;
+    }
+
+    public void setMsg_identityCode(String msg_identityCode) {
+        this.msg_identityCode = msg_identityCode;
+    }
+
+    public String getMsg_sent_id() {
+        return msg_sent_id;
+    }
+
+    public void setMsg_sent_id(String msg_sent_id) {
+        this.msg_sent_id = msg_sent_id;
+    }
+
+    public String getMsg_receive_id() {
+        return msg_receive_id;
+    }
+
+    public void setMsg_receive_id(String msg_receive_id) {
+        this.msg_receive_id = msg_receive_id;
+    }
+
+    public String getMsg_text() {
+        return msg_text;
+    }
+
+    public void setMsg_text(String msg_text) {
+        this.msg_text = msg_text;
+    }
 }
